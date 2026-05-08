@@ -1,26 +1,352 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ============================================================
+   ElectroCombat Operator — Cyberpunk Design System
+   Dark neon "robotic/cyberpunk" aesthetic
+   ============================================================ */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: #0a0b1a;
+  --color-surface: #111227;
+  --color-surface-alt: #191b33;
+  --color-border: #2a2d52;
+  --color-foreground: #e4e6f0;
+  --color-muted: #8889a5;
+
+  --color-neon-cyan: #00f0ff;
+  --color-neon-magenta: #ff00aa;
+  --color-neon-green: #39ff14;
+  --color-neon-yellow: #ffe600;
+  --color-neon-red: #ff2040;
+  --color-neon-orange: #ff8c00;
+
+  --font-sans: var(--font-rajdhani);
+  --font-mono: var(--font-orbitron);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ---- Base ---- */
+:root {
+  --bg: #0a0b1a;
+  --glow-cyan: 0 0 20px rgba(0, 240, 255, 0.4);
+  --glow-magenta: 0 0 20px rgba(255, 0, 170, 0.4);
+  --glow-green: 0 0 20px rgba(57, 255, 20, 0.4);
+  --glow-red: 0 0 20px rgba(255, 32, 64, 0.5);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: #e4e6f0;
+  font-family: var(--font-rajdhani), system-ui, sans-serif;
+}
+
+/* ---- Scanline overlay ---- */
+.scanlines::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 240, 255, 0.015) 2px,
+    rgba(0, 240, 255, 0.015) 4px
+  );
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* ---- Neon glow borders ---- */
+.neon-border-cyan {
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  box-shadow: inset 0 0 12px rgba(0, 240, 255, 0.05), 0 0 12px rgba(0, 240, 255, 0.1);
+}
+
+.neon-border-magenta {
+  border: 1px solid rgba(255, 0, 170, 0.3);
+  box-shadow: inset 0 0 12px rgba(255, 0, 170, 0.05), 0 0 12px rgba(255, 0, 170, 0.1);
+}
+
+.neon-border-green {
+  border: 1px solid rgba(57, 255, 20, 0.3);
+  box-shadow: inset 0 0 12px rgba(57, 255, 20, 0.05), 0 0 12px rgba(57, 255, 20, 0.1);
+}
+
+.neon-border-red {
+  border: 1px solid rgba(255, 32, 64, 0.3);
+  box-shadow: inset 0 0 12px rgba(255, 32, 64, 0.05), 0 0 12px rgba(255, 32, 64, 0.1);
+}
+
+/* ---- Neon text ---- */
+.neon-text-cyan {
+  color: #00f0ff;
+  text-shadow: 0 0 7px rgba(0, 240, 255, 0.7), 0 0 20px rgba(0, 240, 255, 0.3);
+}
+
+.neon-text-magenta {
+  color: #ff00aa;
+  text-shadow: 0 0 7px rgba(255, 0, 170, 0.7), 0 0 20px rgba(255, 0, 170, 0.3);
+}
+
+.neon-text-green {
+  color: #39ff14;
+  text-shadow: 0 0 7px rgba(57, 255, 20, 0.7), 0 0 20px rgba(57, 255, 20, 0.3);
+}
+
+.neon-text-red {
+  color: #ff2040;
+  text-shadow: 0 0 7px rgba(255, 32, 64, 0.7), 0 0 20px rgba(255, 32, 64, 0.3);
+}
+
+.neon-text-yellow {
+  color: #ffe600;
+  text-shadow: 0 0 7px rgba(255, 230, 0, 0.7), 0 0 20px rgba(255, 230, 0, 0.3);
+}
+
+/* ---- Timer display ---- */
+.timer-display {
+  font-family: var(--font-orbitron), monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
+/* ---- Animations ---- */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes neon-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.4; }
+}
+
+@keyframes countdown-zoom {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+@keyframes knockout-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes sweep-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes border-glow-pulse {
+  0%, 100% { box-shadow: inset 0 0 12px rgba(0, 240, 255, 0.05), 0 0 12px rgba(0, 240, 255, 0.1); }
+  50% { box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.12), 0 0 25px rgba(0, 240, 255, 0.2); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-neon-flicker {
+  animation: neon-flicker 3s ease-in-out infinite;
+}
+
+.animate-countdown-zoom {
+  animation: countdown-zoom 0.8s ease-out;
+}
+
+.animate-knockout-pulse {
+  animation: knockout-pulse 0.6s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s ease-out;
+}
+
+.animate-border-glow {
+  animation: border-glow-pulse 2s ease-in-out infinite;
+}
+
+/* ---- Buttons ---- */
+.btn-neon {
+  position: relative;
+  padding: 0.6rem 1.4rem;
+  font-family: var(--font-orbitron), monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: 1px solid;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.btn-neon:hover {
+  transform: translateY(-1px);
+}
+
+.btn-neon:active {
+  transform: translateY(0);
+}
+
+.btn-neon:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-cyan {
+  color: #00f0ff;
+  border-color: #00f0ff;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+}
+.btn-cyan:hover:not(:disabled) {
+  background: rgba(0, 240, 255, 0.1);
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.35);
+}
+
+.btn-magenta {
+  color: #ff00aa;
+  border-color: #ff00aa;
+  box-shadow: 0 0 8px rgba(255, 0, 170, 0.2);
+}
+.btn-magenta:hover:not(:disabled) {
+  background: rgba(255, 0, 170, 0.1);
+  box-shadow: 0 0 16px rgba(255, 0, 170, 0.35);
+}
+
+.btn-green {
+  color: #39ff14;
+  border-color: #39ff14;
+  box-shadow: 0 0 8px rgba(57, 255, 20, 0.2);
+}
+.btn-green:hover:not(:disabled) {
+  background: rgba(57, 255, 20, 0.1);
+  box-shadow: 0 0 16px rgba(57, 255, 20, 0.35);
+}
+
+.btn-red {
+  color: #ff2040;
+  border-color: #ff2040;
+  box-shadow: 0 0 8px rgba(255, 32, 64, 0.2);
+}
+.btn-red:hover:not(:disabled) {
+  background: rgba(255, 32, 64, 0.1);
+  box-shadow: 0 0 16px rgba(255, 32, 64, 0.35);
+}
+
+.btn-yellow {
+  color: #ffe600;
+  border-color: #ffe600;
+  box-shadow: 0 0 8px rgba(255, 230, 0, 0.2);
+}
+.btn-yellow:hover:not(:disabled) {
+  background: rgba(255, 230, 0, 0.1);
+  box-shadow: 0 0 16px rgba(255, 230, 0, 0.35);
+}
+
+.btn-solid-cyan {
+  color: #0a0b1a;
+  background: #00f0ff;
+  border-color: #00f0ff;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+}
+.btn-solid-cyan:hover:not(:disabled) {
+  background: #33f3ff;
+  box-shadow: 0 0 24px rgba(0, 240, 255, 0.5);
+}
+
+/* ---- Card panels ---- */
+.panel {
+  background: #111227;
+  border: 1px solid #2a2d52;
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.panel-glow {
+  background: #111227;
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: 8px;
+  padding: 1.25rem;
+  box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.03), 0 0 15px rgba(0, 240, 255, 0.06);
+}
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0b1a;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2d52;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3d62;
+}
+
+/* ---- Select inputs ---- */
+.select-neon {
+  background: #111227;
+  border: 1px solid #2a2d52;
+  color: #e4e6f0;
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-rajdhani), system-ui, sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.select-neon:focus {
+  border-color: #00f0ff;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+}
+
+.select-neon option {
+  background: #111227;
+  color: #e4e6f0;
+}
+
+/* ---- Input ---- */
+.input-neon {
+  background: #111227;
+  border: 1px solid #2a2d52;
+  color: #e4e6f0;
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-rajdhani), system-ui, sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-neon:focus {
+  border-color: #00f0ff;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+}
+
+.input-neon::placeholder {
+  color: #5a5c78;
+}
+
+/* ---- Recovery overlay background ---- */
+.recovery-overlay {
+  background: radial-gradient(ellipse at center, rgba(255, 32, 64, 0.1) 0%, transparent 70%);
+}
+
+/* ---- Knockout overlay ---- */
+.knockout-overlay {
+  background: radial-gradient(ellipse at center, rgba(255, 32, 64, 0.2) 0%, rgba(10, 11, 26, 0.95) 100%);
 }
