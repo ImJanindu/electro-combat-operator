@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const serveModule = require('electron-serve');
 const serve = serveModule.default || serveModule;
 const path = require('path');
@@ -46,6 +46,13 @@ if (!gotTheLock) {
 
     loadURL(win).then(() => {
       win.loadURL('app://-');
+    });
+
+    win.webContents.setWindowOpenHandler(({ url }) => {
+      if (url.startsWith('http:') || url.startsWith('https:')) {
+        shell.openExternal(url);
+      }
+      return { action: 'deny' };
     });
   }
 

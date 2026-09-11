@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Orbitron, Rajdhani } from "next/font/google";
+import GlobalShortcuts from "@/components/GlobalShortcuts";
 import "./globals.css";
 
 const orbitron = Orbitron({
@@ -36,6 +37,7 @@ export default function RootLayout({
         className="min-h-full flex flex-col bg-background text-foreground antialiased"
         suppressHydrationWarning
       >
+        <GlobalShortcuts />
         {children}
       </body>
     </html>
