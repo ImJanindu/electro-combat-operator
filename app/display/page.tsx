@@ -249,8 +249,8 @@ export default function DisplayPage() {
             <div className="mt-8 md:mt-12 animate-slide-up flex flex-col md:flex-row gap-4 justify-center">
               {/* Team A Recovery */}
               {(state.recoveryTimeA !== null || (isKnockout && state.recoveryTimeA === 0)) && (
-                <div className={`flex flex-col items-center justify-center rounded-lg px-6 py-4 bg-surface/80 w-[280px] md:w-[340px] max-w-full ${state.recoveryTimeA === 0 ? 'neon-border-red' : 'neon-border-yellow'}`}>
-                  <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-neon-yellow uppercase mb-2 truncate max-w-[250px]">
+                <div className={`flex flex-col items-center justify-center rounded-lg px-6 py-4 bg-surface/80 min-w-[280px] md:min-w-[360px] w-auto max-w-full ${state.recoveryTimeA === 0 ? 'neon-border-red' : 'neon-border-yellow'}`}>
+                  <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-neon-yellow uppercase mb-2 text-center break-words max-w-full">
                     {state.recoveryTimeA === 0 ? `💀 ${state.teamA?.name || 'TEAM A'} KNOCKOUT` : `⚠ ${state.teamA?.name || 'TEAM A'} RECOVERY`}
                   </p>
                   <div
@@ -263,8 +263,8 @@ export default function DisplayPage() {
               )}
               {/* Team B Recovery */}
               {(state.recoveryTimeB !== null || (isKnockout && state.recoveryTimeB === 0)) && (
-                <div className={`flex flex-col items-center justify-center rounded-lg px-6 py-4 bg-surface/80 w-[280px] md:w-[340px] max-w-full ${state.recoveryTimeB === 0 ? 'neon-border-red' : 'neon-border-yellow'}`}>
-                  <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-neon-yellow uppercase mb-2 truncate max-w-[250px]">
+                <div className={`flex flex-col items-center justify-center rounded-lg px-6 py-4 bg-surface/80 min-w-[280px] md:min-w-[360px] w-auto max-w-full ${state.recoveryTimeB === 0 ? 'neon-border-red' : 'neon-border-yellow'}`}>
+                  <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-neon-yellow uppercase mb-2 text-center break-words max-w-full">
                     {state.recoveryTimeB === 0 ? `💀 ${state.teamB?.name || 'TEAM B'} KNOCKOUT` : `⚠ ${state.teamB?.name || 'TEAM B'} RECOVERY`}
                   </p>
                   <div
