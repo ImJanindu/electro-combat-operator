@@ -89,7 +89,6 @@ export default function DisplayPage() {
       {isKnockout && (
         <div className="fixed inset-0 knockout-overlay pointer-events-none z-10" />
       )}
-
       {/* Top Logo */}
       <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50">
         <img src="/logo.png" alt="ElectroCombat Logo" className="h-32 md:h-48 lg:h-56 w-auto opacity-90 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]" />
@@ -389,12 +388,6 @@ export default function DisplayPage() {
         </div>
       )}
 
-      {/* Corner branding */}
-      <div className="fixed bottom-4 right-6 z-20">
-        <p className="font-mono text-[0.6rem] text-muted/30 tracking-[0.3em] uppercase">
-          ElectroCombat v1.0
-        </p>
-      </div>
     </div>
   );
 }

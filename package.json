@@ -14,6 +14,11 @@
   "build": {
     "appId": "com.electrocombat.operator",
     "productName": "Electro Combat Operator",
+    "artifactName": "${productName} Setup.${ext}",
+    "win": {
+      "icon": "public/app-logo.ico",
+      "target": "nsis"
+    },
     "directories": {
       "output": "dist"
     },
