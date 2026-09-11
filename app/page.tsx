@@ -48,13 +48,16 @@ export default function HomePage() {
 
       <div className="relative z-10 max-w-3xl w-full text-center">
         {/* Title */}
+        <div className="flex justify-center mb-2 animate-slide-up">
+          <img src="/logo.png" alt="ElectroCombat Logo" className="h-32 sm:h-40 md:h-48 w-auto drop-shadow-[0_0_20px_rgba(0,255,255,0.4)]" />
+        </div>
         <div className="mb-2">
-          <span className="text-xs font-mono tracking-[0.4em] text-muted uppercase">
-            University Robot Combat
+          <span className="text-[0.6rem] sm:text-xs font-mono tracking-[0.15em] sm:tracking-[0.25em] text-muted uppercase">
+            MTSS of University of Sri Jayewardnepura Presents
           </span>
         </div>
         <h1 className="font-mono text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mb-3 neon-text-cyan animate-neon-flicker">
-          ELECTROCOMBAT
+          ELECTRO COMBAT 2.0
         </h1>
         <p className="font-mono text-sm tracking-[0.3em] text-neon-magenta uppercase mb-10">
           ⚡ OPERATOR SYSTEM ⚡
