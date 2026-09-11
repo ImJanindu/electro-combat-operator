@@ -48,7 +48,7 @@ export default function HomePage() {
 
       <div className="relative z-10 max-w-3xl w-full text-center">
         {/* Title */}
-        <div className="flex justify-center mb-2 animate-slide-up">
+        <div className="flex justify-center -mt-8 -mb-4 sm:-mb-6 md:-mb-8 animate-slide-up">
           <img src="/logo.png" alt="ElectroCombat Logo" className="h-32 sm:h-40 md:h-48 w-auto drop-shadow-[0_0_20px_rgba(0,255,255,0.4)]" />
         </div>
         <div className="mb-2">
