@@ -67,6 +67,16 @@ export default function OperatorPage() {
     setNewTeamName('');
   }, [newTeamName, store]);
 
+  const handleRemoveTeam = useCallback((id: string) => {
+    const pin = window.prompt('Enter PIN to delete team:');
+    const correctPin = process.env.NEXT_PUBLIC_CLEAR_HISTORY_PIN || '23249';
+    if (pin === correctPin) {
+      store.remove(id);
+    } else if (pin !== null) {
+      alert('Incorrect PIN.');
+    }
+  }, [store]);
+
   const handleStart = useCallback(() => {
     timer.setMatchDuration(durationMin * 60);
     setTimeout(() => timer.startCountdown(), 50);
@@ -353,7 +363,7 @@ export default function OperatorPage() {
                       {team.totalPoints}pt
                     </span>
                     <button
-                      onClick={() => store.remove(team.id)}
+                      onClick={() => handleRemoveTeam(team.id)}
                       className="text-neon-red/50 hover:text-neon-red text-xs transition-colors opacity-0 group-hover:opacity-100"
                       title="Remove team"
                     >
