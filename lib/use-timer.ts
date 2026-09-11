@@ -85,8 +85,10 @@ export function useTimer() {
 
   // ---- Pre-start 3-2-1 countdown ----
   const startCountdown = useCallback(() => {
-    clearInterval_();
     const s = stateRef.current;
+    if (s.phase === 'countdown' || s.phase === 'running') return;
+    
+    clearInterval_();
     if (!s.teamA || !s.teamB) return;
 
     setState((prev) => ({ ...prev, phase: 'countdown', countdownValue: 3 }));
@@ -111,15 +113,19 @@ export function useTimer() {
         }));
         // Start main tick
         intervalRef.current = setInterval(() => {
+          let ended = false;
           setState((prev) => {
             if (prev.mainTime <= 1) {
-              clearInterval_();
-              playBuzzer();
-              logEvent('match_end', 'Timer reached zero');
+              ended = true;
               return { ...prev, mainTime: 0, phase: 'finished' };
             }
             return { ...prev, mainTime: prev.mainTime - 1 };
           });
+          if (ended) {
+            clearInterval_();
+            playBuzzer();
+            logEvent('match_end', 'Timer reached zero');
+          }
         }, 1000);
       }
     }, 1000);
@@ -134,18 +140,25 @@ export function useTimer() {
 
   // ---- Resume (from pause, not recovery) ----
   const resume = useCallback(() => {
+    const s = stateRef.current;
+    if (s.phase !== 'paused') return;
+    
     logEvent('resume', 'Match resumed');
     setState((prev) => ({ ...prev, phase: 'running' }));
     intervalRef.current = setInterval(() => {
+      let ended = false;
       setState((prev) => {
         if (prev.mainTime <= 1) {
-          clearInterval_();
-          playBuzzer();
-          logEvent('match_end', 'Timer reached zero');
+          ended = true;
           return { ...prev, mainTime: 0, phase: 'finished' };
         }
         return { ...prev, mainTime: prev.mainTime - 1 };
       });
+      if (ended) {
+        clearInterval_();
+        playBuzzer();
+        logEvent('match_end', 'Timer reached zero');
+      }
     }, 1000);
   }, [clearInterval_, logEvent]);
 
@@ -160,6 +173,9 @@ export function useTimer() {
   // ---- Trigger 30s Recovery ----
   const startRecovery = useCallback(
     (team: 'A' | 'B') => {
+      const s = stateRef.current;
+      if (s.phase === 'recovery' || s.phase === 'knockout') return;
+
       clearInterval_();
       playSiren();
       logEvent(
@@ -174,15 +190,21 @@ export function useTimer() {
       }));
 
       intervalRef.current = setInterval(() => {
+        let isKnockout = false;
+        let kTeam: 'A' | 'B' | null = null;
         setState((prev) => {
           if (prev.recoveryTime <= 1) {
-            clearInterval_();
-            playKnockout();
-            logEvent('knockout', `Knockout! Team ${prev.knockoutTeam} failed to recover`);
+            isKnockout = true;
+            kTeam = prev.knockoutTeam;
             return { ...prev, recoveryTime: 0, phase: 'knockout' };
           }
           return { ...prev, recoveryTime: prev.recoveryTime - 1 };
         });
+        if (isKnockout) {
+          clearInterval_();
+          playKnockout();
+          logEvent('knockout', `Knockout! Team ${kTeam} failed to recover`);
+        }
       }, 1000);
     },
     [clearInterval_, logEvent]
@@ -190,6 +212,9 @@ export function useTimer() {
 
   // ---- Resume from recovery ----
   const recoverResume = useCallback(() => {
+    const s = stateRef.current;
+    if (s.phase !== 'recovery') return;
+
     clearInterval_();
     logEvent('recovery_resume', 'Robot recovered — match resuming');
     setState((prev) => ({
@@ -201,15 +226,19 @@ export function useTimer() {
 
     // Resume main timer from where it left off
     intervalRef.current = setInterval(() => {
+      let ended = false;
       setState((prev) => {
         if (prev.mainTime <= 1) {
-          clearInterval_();
-          playBuzzer();
-          logEvent('match_end', 'Timer reached zero');
+          ended = true;
           return { ...prev, mainTime: 0, phase: 'finished' };
         }
         return { ...prev, mainTime: prev.mainTime - 1 };
       });
+      if (ended) {
+        clearInterval_();
+        playBuzzer();
+        logEvent('match_end', 'Timer reached zero');
+      }
     }, 1000);
   }, [clearInterval_, logEvent]);
 
