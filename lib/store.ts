@@ -115,6 +115,22 @@ export function addMatchRecord(record: MatchRecord): MatchRecord[] {
   return updated;
 }
 
+export function clearMatchHistory(): void {
+  writeJSON(HISTORY_KEY, []);
+
+  // Reset all team stats to 0 to clear the leaderboard data
+  const teams = getTeams();
+  const resetTeams = teams.map((t) => ({
+    ...t,
+    matchesPlayed: 0,
+    won: 0,
+    defeated: 0,
+    drawn: 0,
+    totalPoints: 0,
+  }));
+  saveTeams(resetTeams);
+}
+
 // --------------- React Hook ---------------
 
 export function useTeamStore() {

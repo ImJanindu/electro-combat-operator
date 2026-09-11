@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getMatchHistory } from '@/lib/store';
+import { getMatchHistory, clearMatchHistory } from '@/lib/store';
 import type { MatchRecord } from '@/lib/types';
 
 function formatDuration(seconds: number): string {
@@ -79,6 +79,18 @@ export default function HistoryPage() {
     setExpandedId((prev) => (prev === id ? null : id));
   };
 
+  const handleClearHistory = () => {
+    if (history.length === 0) return;
+    const pin = window.prompt('Enter PIN to clear match history:');
+    const correctPin = process.env.NEXT_PUBLIC_CLEAR_HISTORY_PIN || '23249';
+    if (pin === correctPin) {
+      clearMatchHistory();
+      setHistory([]);
+    } else if (pin !== null) {
+      alert('Incorrect PIN.');
+    }
+  };
+
   return (
     <div className="min-h-screen p-4 md:p-8 scanlines">
       {/* Background */}
@@ -101,12 +113,23 @@ export default function HistoryPage() {
               📜 MATCH HISTORY
             </h1>
           </div>
-          <Link
-            href="/leaderboard"
-            className="btn-neon btn-yellow text-[0.65rem] py-1.5 px-3"
-          >
-            LEADERBOARD →
-          </Link>
+          <div className="flex gap-3 items-center">
+            {history.length > 0 && (
+              <button
+                onClick={handleClearHistory}
+                className="btn-neon text-[0.65rem] py-1.5 px-3 !text-neon-red !border-neon-red hover:!bg-neon-red/10 shadow-[0_0_10px_rgba(255,51,102,0.5)]"
+                title="Clear all match history"
+              >
+                CLEAR HISTORY
+              </button>
+            )}
+            <Link
+              href="/leaderboard"
+              className="btn-neon btn-yellow text-[0.65rem] py-1.5 px-3"
+            >
+              LEADERBOARD →
+            </Link>
+          </div>
         </div>
 
         {/* Match list */}

@@ -77,14 +77,19 @@ export default function DisplayPage() {
         <div className="fixed inset-0 knockout-overlay pointer-events-none z-10" />
       )}
 
+      {/* Top Logo */}
+      <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50">
+        <img src="/logo.png" alt="ElectroCombat Logo" className="h-32 md:h-48 lg:h-56 w-auto opacity-90 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]" />
+      </div>
+
       {/* ---- IDLE state ---- */}
       {isIdle && (
         <div className="relative z-20 text-center animate-slide-up">
-          <p className="font-mono text-sm tracking-[0.4em] text-muted uppercase mb-4">
-            University Robot Combat
+          <p className="font-mono text-[0.6rem] md:text-sm tracking-[0.15em] md:tracking-[0.25em] text-muted uppercase mb-4">
+            MTSS of University of Sri Jayewardnepura Presents
           </p>
           <h1 className="font-mono text-5xl md:text-7xl font-black neon-text-cyan animate-neon-flicker tracking-tight">
-            ELECTROCOMBAT
+            ELECTRO COMBAT 2.0
           </h1>
           <p className="font-mono text-sm tracking-[0.25em] text-neon-magenta mt-4 uppercase">
             Waiting for operator...
