@@ -4,7 +4,6 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { useTimer } from '@/lib/use-timer';
 import { useTeamStore } from '@/lib/store';
-import { exportBackup, importBackup, getLastBackupTime } from '@/lib/backup';
 import type { MatchResult, MatchRecord } from '@/lib/types';
 import { PinDialog } from '@/components/PinDialog';
 
@@ -57,18 +56,8 @@ export default function OperatorPage() {
   // Match duration input (minutes)
   const [durationMin, setDurationMin] = useState(3);
 
-  // Backup state
-  const [lastBackup, setLastBackup] = useState<number | null>(null);
-  const [backupReminder, setBackupReminder] = useState(false);
-  const [importMsg, setImportMsg] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   // Recovery team target
   const [recoveryTarget, setRecoveryTarget] = useState<'A' | 'B'>('A');
-
-  useEffect(() => {
-    setLastBackup(getLastBackupTime());
-  }, []);
 
   // Sync selected teams → timer
   useEffect(() => {
@@ -152,31 +141,9 @@ export default function OperatorPage() {
           : 'Draw';
       timer.showResult(result, winnerName);
 
-      setBackupReminder(true);
-      setTimeout(() => setBackupReminder(false), 8000);
     },
     [timer, store]
   );
-
-  const handleExport = useCallback(() => {
-    exportBackup();
-    setLastBackup(Date.now());
-    setBackupReminder(false);
-  }, []);
-
-  const handleImport = useCallback(async () => {
-    const file = fileInputRef.current?.files?.[0];
-    if (!file) return;
-    const result = await importBackup(file);
-    if (result.success) {
-      setImportMsg('✅ Backup restored successfully!');
-      store.refresh();
-    } else {
-      setImportMsg(`❌ ${result.error}`);
-    }
-    setTimeout(() => setImportMsg(''), 5000);
-    if (fileInputRef.current) fileInputRef.current.value = '';
-  }, [store]);
 
   const { phase } = timer.state;
   const isIdle = phase === 'idle';
@@ -188,10 +155,9 @@ export default function OperatorPage() {
   const isStopped = phase === 'stopped';
   const isCountdown = phase === 'countdown';
   const isResult = phase === 'result';
-  const isShowLeaderboard = phase === 'show_leaderboard';
   const matchInProgress = isRunning || isPaused || isCountdown;
   const matchEnded = isFinished || isKnockout || isStopped;
-  const isPostMatch = isResult || isShowLeaderboard;
+  const isPostMatch = isResult;
   const teamsSelected = !!selectedTeamAId && !!selectedTeamBId && selectedTeamAId !== selectedTeamBId;
 
   // ---- Keyboard Shortcuts ----
@@ -284,23 +250,13 @@ export default function OperatorPage() {
         }
       }
 
-      // Post-match only shortcuts
-      if (isPostMatch) {
-        // I — Return to Idle
-        if (key === 'i') {
-          e.preventDefault();
-          timer.goToIdle();
-          setSelectedTeamAId('');
-          setSelectedTeamBId('');
-          return;
-        }
-
-        // L — Show Leaderboard
-        if (key === 'l') {
-          e.preventDefault();
-          timer.showLeaderboard();
-          return;
-        }
+      // I — Return to Idle
+      if (isPostMatch && key === 'i') {
+        e.preventDefault();
+        timer.goToIdle();
+        setSelectedTeamAId('');
+        setSelectedTeamBId('');
+        return;
       }
     };
 
@@ -328,43 +284,7 @@ export default function OperatorPage() {
             OPERATOR PANEL
           </h1>
         </div>
-        <div className="flex items-center gap-3">
-          {/* Backup controls */}
-          <button onClick={handleExport} className="btn-neon btn-green text-[0.65rem] py-1.5 px-3">
-            ↓ Export
-          </button>
-          <label className="btn-neon btn-yellow text-[0.65rem] py-1.5 px-3 cursor-pointer">
-            ↑ Import
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".json"
-              onChange={handleImport}
-              className="hidden"
-            />
-          </label>
-        </div>
       </div>
-
-      {/* Backup messages */}
-      {importMsg && (
-        <div className="panel mb-4 text-sm font-mono animate-slide-up">
-          {importMsg}
-        </div>
-      )}
-      {backupReminder && (
-        <div className="neon-border-green panel mb-4 text-sm font-mono animate-slide-up flex items-center justify-between">
-          <span className="neon-text-green">💾 Match saved! Consider exporting a backup.</span>
-          <button onClick={handleExport} className="btn-neon btn-green text-[0.6rem] py-1 px-2 ml-3">
-            Export Now
-          </button>
-        </div>
-      )}
-      {lastBackup && !backupReminder && (
-        <p className="text-[0.65rem] text-muted mb-4 font-mono">
-          Last backup: {new Date(lastBackup).toLocaleString()}
-        </p>
-      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* ====== LEFT COLUMN: Team Management ====== */}
@@ -736,30 +656,6 @@ export default function OperatorPage() {
                 📺 DISPLAY CONTROL
               </h2>
               <div className="space-y-2">
-                <p className="text-[0.65rem] text-muted font-mono mb-2">
-                  Currently showing: <span className={isResult ? 'neon-text-yellow' : 'neon-text-blue'}>
-                    {isResult ? 'MATCH RESULT' : 'LEADERBOARD'}
-                  </span>
-                </p>
-                {isResult && (
-                  <button
-                    onClick={timer.showLeaderboard}
-                    className="btn-neon btn-yellow w-full py-2.5"
-                  >
-                    📊 SHOW LEADERBOARD
-                  </button>
-                )}
-                {isShowLeaderboard && (
-                  <button
-                    onClick={() => {
-                      const mr = timer.state.matchResult;
-                      if (mr) timer.showResult(mr.result, mr.winnerName);
-                    }}
-                    className="btn-neon btn-yellow w-full py-2.5"
-                  >
-                    🏆 SHOW RESULT AGAIN
-                  </button>
-                )}
                 <button
                   onClick={() => {
                     timer.goToIdle();

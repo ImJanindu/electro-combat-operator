@@ -19,22 +19,6 @@ const NAV_ITEMS = [
     color: 'neon-text-red',
     border: 'neon-border-red',
   },
-  {
-    href: '/leaderboard',
-    label: 'Leaderboard',
-    description: 'Tournament standings & statistics',
-    icon: '🏆',
-    color: 'neon-text-yellow',
-    border: 'neon-border-blue',
-  },
-  {
-    href: '/history',
-    label: 'Match History',
-    description: 'Browse past matches & event logs',
-    icon: '📜',
-    color: 'neon-text-green',
-    border: 'neon-border-green',
-  },
 ];
 
 export default function HomePage() {

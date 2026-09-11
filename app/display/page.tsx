@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useTimerReceiver } from '@/lib/use-timer-receiver';
-import { getTeams } from '@/lib/store';
-import type { Team } from '@/lib/types';
 
 function formatTime(seconds: number): string {
   const m = Math.floor(seconds / 60);
@@ -13,7 +11,6 @@ function formatTime(seconds: number): string {
 
 export default function DisplayPage() {
   const state = useTimerReceiver();
-  const [leaderboard, setLeaderboard] = useState<Team[]>([]);
 
   const { phase } = state;
   const isIdle = phase === 'idle';
@@ -25,23 +22,9 @@ export default function DisplayPage() {
   const isFinished = phase === 'finished';
   const isStopped = phase === 'stopped';
   const isResult = phase === 'result';
-  const isShowLeaderboard = phase === 'show_leaderboard';
-
-  // Load leaderboard data when the leaderboard phase is active
-  useEffect(() => {
-    if (isShowLeaderboard) {
-      const teams = getTeams();
-      teams.sort((a, b) => {
-        if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
-        if (b.won !== a.won) return b.won - a.won;
-        return a.name.localeCompare(b.name);
-      });
-      setLeaderboard(teams);
-    }
-  }, [isShowLeaderboard]);
 
   // Determine which "active match" phases to show (timer display)
-  const isMatchPhase = !isIdle && !isCountdown && !isResult && !isShowLeaderboard;
+  const isMatchPhase = !isIdle && !isCountdown && !isResult;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden scanlines select-none cursor-default">
@@ -63,7 +46,6 @@ export default function DisplayPage() {
             isRecovery ? 'bg-neon-orange/10' :
             isKnockout ? 'bg-neon-red/15' :
             isResult ? 'bg-neon-blue/8' :
-            isShowLeaderboard ? 'bg-neon-blue/5' :
             'bg-neon-red/5'
           }`}
         />
@@ -189,105 +171,6 @@ export default function DisplayPage() {
         </div>
       )}
 
-      {/* ---- LEADERBOARD DISPLAY ---- */}
-      {isShowLeaderboard && (
-        <div className="relative z-20 w-full max-w-4xl px-6 animate-slide-up">
-          <h2 className="font-mono text-3xl md:text-4xl font-black neon-text-yellow text-center mb-8 tracking-wide">
-            🏆 LEADERBOARD
-          </h2>
-
-          {leaderboard.length === 0 ? (
-            <p className="text-center font-mono text-muted">No standings data.</p>
-          ) : (
-            <div className="panel-glow overflow-hidden">
-              <table className="w-full text-sm md:text-base">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="text-left font-mono text-[0.7rem] md:text-xs tracking-[0.2em] text-muted uppercase py-3 px-4 w-14">
-                      #
-                    </th>
-                    <th className="text-left font-mono text-[0.7rem] md:text-xs tracking-[0.2em] text-muted uppercase py-3 px-4">
-                      Team
-                    </th>
-                    <th className="text-center font-mono text-[0.7rem] md:text-xs tracking-[0.2em] text-muted uppercase py-3 px-4">
-                      P
-                    </th>
-                    <th className="text-center font-mono text-[0.7rem] md:text-xs tracking-[0.2em] text-muted uppercase py-3 px-4">
-                      W
-                    </th>
-                    <th className="text-center font-mono text-[0.7rem] md:text-xs tracking-[0.2em] text-muted uppercase py-3 px-4">
-                      D
-                    </th>
-                    <th className="text-center font-mono text-[0.7rem] md:text-xs tracking-[0.2em] text-muted uppercase py-3 px-4">
-                      L
-                    </th>
-                    <th className="text-center font-mono text-[0.7rem] md:text-xs tracking-[0.2em] text-neon-yellow uppercase py-3 px-4">
-                      PTS
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {leaderboard.map((team, i) => (
-                    <tr
-                      key={team.id}
-                      className={`border-b border-border/30 transition-colors ${
-                        i === 0 && team.totalPoints > 0
-                          ? 'bg-neon-yellow/5'
-                          : ''
-                      }`}
-                    >
-                      <td className="py-3 px-4">
-                        <span
-                          className={`font-mono text-base md:text-lg font-bold ${
-                            i === 0 && team.totalPoints > 0
-                              ? 'neon-text-yellow'
-                              : i === 1 && team.totalPoints > 0
-                              ? 'text-foreground/80'
-                              : i === 2 && team.totalPoints > 0
-                              ? 'text-neon-orange'
-                              : 'text-muted'
-                          }`}
-                        >
-                          {i + 1}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className="font-semibold text-base md:text-lg">
-                          {i === 0 && team.totalPoints > 0 && '👑 '}
-                          {team.name}
-                        </span>
-                      </td>
-                      <td className="text-center py-3 px-4 font-mono text-muted">
-                        {team.matchesPlayed}
-                      </td>
-                      <td className="text-center py-3 px-4 font-mono text-neon-green">
-                        {team.won}
-                      </td>
-                      <td className="text-center py-3 px-4 font-mono text-neon-yellow">
-                        {team.drawn}
-                      </td>
-                      <td className="text-center py-3 px-4 font-mono text-neon-red">
-                        {team.defeated}
-                      </td>
-                      <td className="text-center py-3 px-4">
-                        <span
-                          className={`font-mono font-bold text-lg md:text-xl ${
-                            i === 0 && team.totalPoints > 0
-                              ? 'neon-text-yellow'
-                              : 'text-foreground'
-                          }`}
-                        >
-                          {team.totalPoints}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      )}
 
       {/* ---- MATCH ACTIVE (running / paused / recovery / knockout / finished / stopped) ---- */}
       {isMatchPhase && (

@@ -54,8 +54,7 @@ export type TimerPhase =
   | 'knockout'          // Recovery expired — knockout triggered
   | 'finished'          // Main timer reached 0
   | 'stopped'           // Emergency stop
-  | 'result'            // Showing match result on display
-  | 'show_leaderboard'; // Showing leaderboard on display
+  | 'result';           // Showing match result on display
 
 export interface TimerState {
   phase: TimerPhase;

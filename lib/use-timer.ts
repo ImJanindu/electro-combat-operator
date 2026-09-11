@@ -284,10 +284,7 @@ export function useTimer() {
     []
   );
 
-  // ---- Show leaderboard on display ----
-  const showLeaderboard = useCallback(() => {
-    setState((prev) => ({ ...prev, phase: 'show_leaderboard' }));
-  }, []);
+
 
   // ---- Return display to idle ----
   const goToIdle = useCallback(() => {
@@ -316,7 +313,6 @@ export function useTimer() {
     setMatchDuration,
     reset,
     showResult,
-    showLeaderboard,
     goToIdle,
     getMatchDuration,
   };
