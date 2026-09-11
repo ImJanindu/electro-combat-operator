@@ -30,6 +30,7 @@ export default function RootLayout({
       lang="en"
       className={`${orbitron.variable} ${rajdhani.variable} h-full dark`}
       suppressHydrationWarning
+      data-scroll-behavior="smooth"
     >
       <body
         className="min-h-full flex flex-col bg-background text-foreground antialiased"

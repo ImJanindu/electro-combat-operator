@@ -390,7 +390,7 @@ export default function OperatorPage() {
                 + ADD
               </button>
             </div>
-            <div className="space-y-1.5 max-h-60 overflow-y-auto pr-1">
+            <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1 custom-scrollbar">
               {store.teams.length === 0 && (
                 <p className="text-xs text-muted italic">No teams added yet.</p>
               )}
