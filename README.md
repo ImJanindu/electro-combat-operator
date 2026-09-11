@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Electro Combat Operator
 
-## Getting Started
+**Electro Combat Operator** is a high-tech, offline-capable desktop match management system designed specifically for robotic combat tournaments. It features a sophisticated dual-dashboard architecture that empowers tournament operators to control match timers, track scores, and resolve knockouts with precision, while seamlessly broadcasting real-time, synchronized match data to a visually stunning Audience Display.
 
-First, run the development server:
+## 🎓 Event Details
+This application was developed for the **Electro Combat** robotics tournament, an electrifying event proudly organized and hosted by the **Mechatronics Technology Students' Society** at the Faculty of Technology, **University of Sri Jayewardenepura**.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ⚙️ Working Mechanism & Features
+Electro Combat Operator utilizes an Electron-based multi-window IPC (Inter-Process Communication) architecture tailored for live event reliability:
+- **Operator Dashboard:** A secure, neon-styled control panel utilized by the referee or tournament operator. It features strict safety locks, including custom PIN validation for destructive actions (like data wiping) and an OS-level anti-close lock that prevents the app from being force-closed during an active match.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Audience Display:** A synchronized, HUD-style interface optimized for large screens and projectors. It provides the live audience with high-fidelity, real-time views of the match timer, competing teams, and critical match events (like Knockouts and Recoveries).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🎮 Core Controls
+- **Match Timer**: Start, Pause, Resume, and dynamically adjust match time (+/- 10s) on the fly.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Knockout System**: Trigger an authoritative 10-second knockout countdown for robotic incapacitation. Can be interrupted and recovered if the robot regains mobility.
 
-## Learn More
+- **Emergency Stop**: Instantly halt the match and freeze the timer in the event of arena hazards or rule violations.
 
-To learn more about Next.js, take a look at the following resources:
+- **Match Resolution**: Officially resolve matches by assigning wins or draws, which automatically updates the tournament Leaderboard.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Secure Data Management**: Includes a 2-step PIN verification flow for wiping tournament history, complete with a JSON data export tool for safe backups.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛠️ Tech Stack
+Built with cutting-edge web technologies and securely packaged into a standalone Windows `.exe`:
+- **Core Framework**: React 19 & Next.js 16 (App Router).
 
-## Deploy on Vercel
+- **Desktop Environment**: Electron & Electron-Builder (NSIS Installer).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Styling**: Tailwind CSS v4 & custom Neon UI CSS architecture.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **State Management**: Custom React Hooks & LocalStorage data persistence, synchronized across desktop windows via Electron IPC.
+
+## 👨‍💻 Developer
+Architected and developed by **[Janindu Malshan](https://linkedin.com/in/imjanindu)**.
