@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, shell } = require('electron');
 const serveModule = require('electron-serve');
 const serve = serveModule.default || serveModule;
 const path = require('path');
@@ -19,6 +19,13 @@ const createWindow = () => {
 
   loadURL(win).then(() => {
     win.loadURL('app://-');
+  });
+
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    if (url.startsWith('http:') || url.startsWith('https:')) {
+      shell.openExternal(url);
+    }
+    return { action: 'deny' };
   });
 }
 

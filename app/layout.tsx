@@ -15,7 +15,7 @@ const rajdhani = Rajdhani({
 });
 
 export const metadata: Metadata = {
-  title: "ElectroCombat Operator — Robot Combat Arena",
+  title: "ElectroCombat Operator",
   description:
     "Match timer control, emergency recovery countdowns, and tournament leaderboards for university robot combat competitions.",
 };

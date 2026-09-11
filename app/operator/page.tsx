@@ -145,6 +145,12 @@ export default function OperatorPage() {
     setBackupReminder(false);
   }, []);
 
+  const handleReset = useCallback(() => {
+    timer.reset();
+    setSelectedTeamAId('');
+    setSelectedTeamBId('');
+  }, [timer]);
+
   const handleImport = useCallback(async () => {
     const file = fileInputRef.current?.files?.[0];
     if (!file) return;
@@ -261,7 +267,7 @@ export default function OperatorPage() {
         // R — Reset / Cancel
         if (key === 'r') {
           e.preventDefault();
-          timer.reset();
+          handleReset();
           return;
         }
       }
@@ -291,7 +297,7 @@ export default function OperatorPage() {
   }, [
     isIdle, isRunning, isPaused, isRecovery, isPostMatch,
     matchInProgress, matchEnded, teamsSelected, recoveryTarget,
-    timer, handleStart, handleResolve,
+    timer, handleStart, handleResolve, handleReset
   ]);
 
   return (
@@ -692,7 +698,7 @@ export default function OperatorPage() {
                   🤝 DRAW
                 </button>
                 <button
-                  onClick={timer.reset}
+                  onClick={handleReset}
                   className="btn-neon border-border text-muted w-full py-2 text-[0.65rem] mt-1"
                 >
                   CANCEL / RESET

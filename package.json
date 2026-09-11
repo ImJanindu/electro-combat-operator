@@ -13,8 +13,18 @@
   },
   "build": {
     "appId": "com.electrocombat.operator",
+    "productName": "Electro Combat Operator",
     "directories": {
       "output": "dist"
+    },
+    "win": {
+      "icon": "public/logo.png",
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "artifactName": "Electro Combat Operator Setup.exe"
     },
     "files": [
       "out/**/*",

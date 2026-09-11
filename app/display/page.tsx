@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTimerReceiver } from '@/lib/use-timer-receiver';
 import { getTeams } from '@/lib/store';
 import type { Team } from '@/lib/types';
@@ -12,8 +13,20 @@ function formatTime(seconds: number): string {
 }
 
 export default function DisplayPage() {
+  const router = useRouter();
   const state = useTimerReceiver();
   const [leaderboard, setLeaderboard] = useState<Team[]>([]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.altKey && e.key === 'ArrowLeft') {
+        e.preventDefault();
+        router.back();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [router]);
 
   const { phase } = state;
   const isIdle = phase === 'idle';
