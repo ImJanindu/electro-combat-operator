@@ -170,10 +170,10 @@ export default function OperatorPage() {
         return;
       }
 
-      // + — Add 2 seconds
+      // + — Add 1 second
       if (key === '+' || (e.key === '=' && e.shiftKey)) {
         e.preventDefault();
-        if (matchInProgress || isPaused) timer.adjustTime(2);
+        if (matchInProgress || isPaused) timer.adjustTime(1);
         return;
       }
 
