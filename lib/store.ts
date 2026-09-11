@@ -115,6 +115,10 @@ export function addMatchRecord(record: MatchRecord): MatchRecord[] {
   return updated;
 }
 
+export function clearMatchHistory(): void {
+  writeJSON(HISTORY_KEY, []);
+}
+
 // --------------- React Hook ---------------
 
 export function useTeamStore() {
