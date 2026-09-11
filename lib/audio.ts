@@ -5,6 +5,20 @@
 
 const audioCache: Record<string, HTMLAudioElement> = {};
 
+export function preloadAudio(src: string): void {
+  if (typeof window === 'undefined') return;
+  try {
+    if (!audioCache[src]) {
+      const audio = new Audio(src);
+      audio.preload = 'auto';
+      audio.volume = 0.8;
+      audioCache[src] = audio;
+    }
+  } catch {
+    // Audio not available
+  }
+}
+
 function playAudio(src: string): void {
   if (typeof window === 'undefined') return;
   
@@ -52,3 +66,6 @@ export function playSiren(): void {
 export function playKnockout(): void {
   // playAudio('/audio/knockout.mp3');
 }
+
+// Preload the countdown audio immediately on the client so there's no delay
+preloadAudio('/audio/countdown-beep.mp3');
