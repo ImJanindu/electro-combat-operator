@@ -68,17 +68,19 @@ export default function DisplayPage() {
       {showTrapDoors && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 animate-bounce">
           <div className="bg-neon-red/20 border-2 border-neon-red px-8 py-4 rounded-xl backdrop-blur-sm">
-            <h2 className="font-mono text-3xl md:text-5xl font-black text-neon-red tracking-widest uppercase animate-pulse-glow text-center">
-              ⚠ TRAP DOORS OPEN ⚠
+            <h2 className="font-mono text-3xl md:text-5xl font-black text-neon-red tracking-widest uppercase animate-pulse-glow text-center whitespace-nowrap">
+              🛑 TRAP DOORS OPEN 🛑
             </h2>
           </div>
         </div>
       )}
 
-      {/* Top Logo */}
-      <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50">
-        <img src="/logo.png" alt="ElectroCombat Logo" className="h-32 md:h-48 lg:h-56 w-auto opacity-90 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]" />
-      </div>
+      {/* Top Logo - Hide when trap doors open to prevent collision */}
+      {!showTrapDoors && (
+        <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-top-4 duration-500">
+          <img src="/logo.png" alt="ElectroCombat Logo" className="h-32 md:h-48 lg:h-56 w-auto opacity-90 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]" />
+        </div>
+      )}
 
       {/* ---- IDLE state ---- */}
       {isIdle && (
@@ -97,21 +99,21 @@ export default function DisplayPage() {
 
       {/* ---- COUNTDOWN 3-2-1 ---- */}
       {isCountdown && (
-        <div className="relative z-20 text-center">
+        <div className="relative z-20 text-center w-full max-w-5xl px-6">
           {/* Team names */}
-          <div className="flex items-center justify-center gap-8 md:gap-16 mb-12">
-            <div className="text-right">
-              <p className="font-mono text-xs tracking-[0.3em] text-muted uppercase">Team A</p>
-              <p className="font-mono text-2xl md:text-4xl font-bold neon-text-blue mt-1 truncate max-w-[280px]">
+          <div className="flex items-center justify-between mb-8 md:mb-12">
+            <div className="text-left flex-1">
+              <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-muted uppercase">Team A</p>
+              <p className="font-mono text-xl md:text-3xl lg:text-4xl font-bold neon-text-blue mt-1 truncate">
                 {state.teamA?.name || '—'}
               </p>
             </div>
-            <span className="font-mono text-2xl md:text-3xl text-neon-red font-black tracking-widest animate-pulse-glow">
+            <span className="font-mono text-lg md:text-2xl text-muted font-black tracking-widest px-4 shrink-0">
               VS
             </span>
-            <div className="text-left">
-              <p className="font-mono text-xs tracking-[0.3em] text-muted uppercase">Team B</p>
-              <p className="font-mono text-2xl md:text-4xl font-bold neon-text-red mt-1 truncate max-w-[280px]">
+            <div className="text-right flex-1">
+              <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-muted uppercase">Team B</p>
+              <p className="font-mono text-xl md:text-3xl lg:text-4xl font-bold neon-text-red mt-1 truncate">
                 {state.teamB?.name || '—'}
               </p>
             </div>
@@ -136,22 +138,18 @@ export default function DisplayPage() {
               <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-muted uppercase">
                 Team A
               </p>
-              <p className={`font-mono text-xl md:text-3xl lg:text-4xl font-bold mt-1 truncate ${
-                state.matchResult.result === 'teamA' ? 'neon-text-green' : 'text-foreground/50'
-              }`}>
+              <p className="font-mono text-xl md:text-3xl lg:text-4xl font-bold neon-text-blue mt-1 truncate">
                 {state.teamA?.name || '—'}
               </p>
             </div>
-            <span className="font-mono text-lg md:text-2xl text-neon-red font-black tracking-widest px-4 shrink-0">
+            <span className="font-mono text-lg md:text-2xl text-muted font-black tracking-widest px-4 shrink-0">
               VS
             </span>
             <div className="text-right flex-1">
               <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-muted uppercase">
                 Team B
               </p>
-              <p className={`font-mono text-xl md:text-3xl lg:text-4xl font-bold mt-1 truncate ${
-                state.matchResult.result === 'teamB' ? 'neon-text-green' : 'text-foreground/50'
-              }`}>
+              <p className="font-mono text-xl md:text-3xl lg:text-4xl font-bold neon-text-red mt-1 truncate">
                 {state.teamB?.name || '—'}
               </p>
             </div>
@@ -196,7 +194,7 @@ export default function DisplayPage() {
                 {state.teamA?.name || '—'}
               </p>
             </div>
-            <span className="font-mono text-lg md:text-2xl text-neon-red font-black tracking-widest px-4 shrink-0">
+            <span className="font-mono text-lg md:text-2xl text-muted font-black tracking-widest px-4 shrink-0">
               VS
             </span>
             <div className="text-right flex-1">
