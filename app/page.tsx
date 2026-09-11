@@ -87,9 +87,20 @@ export default function HomePage() {
         </div>
 
         {/* Footer */}
-        <p className="text-xs text-muted/50 mt-12 font-mono tracking-wider">
-          OFFLINE-CAPABLE • BROADCAST SYNC • v1.0
-        </p>
+        <div className="mt-12 text-xs text-muted/50 font-mono tracking-wider flex flex-col gap-2">
+          <p>OFFLINE-CAPABLE • BROADCAST SYNC • v3.0</p>
+          <p>
+            DEVELOPED BY{' '}
+            <a 
+              href="https://linkedin.com/in/imjanindu" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-neon-cyan hover:underline hover:text-neon-cyan/80 transition-colors"
+            >
+              @IMJANINDU
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
