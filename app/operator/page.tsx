@@ -6,6 +6,7 @@ import { useTimer } from '@/lib/use-timer';
 import { useTeamStore } from '@/lib/store';
 import { exportBackup, importBackup, getLastBackupTime } from '@/lib/backup';
 import type { MatchResult, MatchRecord } from '@/lib/types';
+import { PinDialog } from '@/components/PinDialog';
 
 function formatTime(seconds: number): string {
   const m = Math.floor(seconds / 60);
@@ -33,6 +34,9 @@ export default function OperatorPage() {
 
   // Prevent accidental tab close/refresh during match
   useEffect(() => {
+    const isElectron = typeof window !== 'undefined' && (window as any).require;
+    if (isElectron) return; // Let Electron main process handle window close
+    
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (timer.state.phase !== 'idle') {
         e.preventDefault();
@@ -79,6 +83,10 @@ export default function OperatorPage() {
 
   // ---- Handlers ----
 
+  // Pin Dialog state
+  const [pinDialogOpen, setPinDialogOpen] = useState(false);
+  const [teamToRemove, setTeamToRemove] = useState<string | null>(null);
+
   const handleAddTeam = useCallback(() => {
     const name = newTeamName.trim();
     if (!name) return;
@@ -87,14 +95,25 @@ export default function OperatorPage() {
   }, [newTeamName, store]);
 
   const handleRemoveTeam = useCallback((id: string) => {
-    const pin = window.prompt('Enter PIN to delete team:');
+    setTeamToRemove(id);
+    setPinDialogOpen(true);
+  }, []);
+
+  const onConfirmRemove = (pin: string) => {
+    setPinDialogOpen(false);
     const correctPin = process.env.NEXT_PUBLIC_CLEAR_HISTORY_PIN || '23249';
-    if (pin === correctPin) {
-      store.remove(id);
-    } else if (pin !== null) {
+    if (pin === correctPin && teamToRemove) {
+      store.remove(teamToRemove);
+    } else if (pin) {
       alert('Incorrect PIN.');
     }
-  }, [store]);
+    setTeamToRemove(null);
+  };
+
+  const onCancelRemove = () => {
+    setPinDialogOpen(false);
+    setTeamToRemove(null);
+  };
 
   const handleStart = useCallback(() => {
     timer.setMatchDuration(durationMin * 60);
@@ -783,6 +802,13 @@ export default function OperatorPage() {
           )}
         </div>
       </div>
+      
+      <PinDialog
+        isOpen={pinDialogOpen}
+        title="Enter PIN to delete team"
+        onConfirm={onConfirmRemove}
+        onCancel={onCancelRemove}
+      />
     </div>
   );
 }

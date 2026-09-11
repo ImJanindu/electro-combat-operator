@@ -53,6 +53,17 @@ export function useTimer() {
   // Broadcast state whenever it changes
   useEffect(() => {
     channelRef.current?.postMessage(state);
+    
+    // Notify Electron Main process if running in Desktop mode
+    if (typeof window !== 'undefined' && (window as any).require) {
+      try {
+        const { ipcRenderer } = (window as any).require('electron');
+        const isActive = !['idle', 'result', 'show_leaderboard'].includes(state.phase);
+        ipcRenderer.send('set-match-active', isActive);
+      } catch (err) {
+        // Ignore if not in Electron
+      }
+    }
   }, [state]);
 
   const logEvent = useCallback(
