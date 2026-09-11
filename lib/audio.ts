@@ -40,15 +40,15 @@ export function playCountdownBeep(): void {
 
 /** Buzzer for match start and match end */
 export function playBuzzer(): void {
-  playAudio('/audio/buzzer.mp3');
+  // playAudio('/audio/buzzer.mp3');
 }
 
 /** Alarm siren for recovery timer */
 export function playSiren(): void {
-  playAudio('/audio/siren.mp3');
+  // playAudio('/audio/siren.mp3');
 }
 
 /** Knockout alert sound */
 export function playKnockout(): void {
-  playAudio('/audio/knockout.mp3');
+  // playAudio('/audio/knockout.mp3');
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Orbitron, Rajdhani } from "next/font/google";
+import GlobalShortcuts from "@/components/GlobalShortcuts";
 import "./globals.css";
 
 const orbitron = Orbitron({
@@ -15,7 +16,7 @@ const rajdhani = Rajdhani({
 });
 
 export const metadata: Metadata = {
-  title: "ElectroCombat Operator — Robot Combat Arena",
+  title: "ElectroCombat Operator",
   description:
     "Match timer control, emergency recovery countdowns, and tournament leaderboards for university robot combat competitions.",
 };
@@ -30,11 +31,13 @@ export default function RootLayout({
       lang="en"
       className={`${orbitron.variable} ${rajdhani.variable} h-full dark`}
       suppressHydrationWarning
+      data-scroll-behavior="smooth"
     >
       <body
         className="min-h-full flex flex-col bg-background text-foreground antialiased"
         suppressHydrationWarning
       >
+        <GlobalShortcuts />
         {children}
       </body>
     </html>
