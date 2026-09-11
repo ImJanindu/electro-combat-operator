@@ -131,6 +131,11 @@ export function clearMatchHistory(): void {
   saveTeams(resetTeams);
 }
 
+export function clearAllData(): void {
+  writeJSON(HISTORY_KEY, []);
+  writeJSON(TEAMS_KEY, []);
+}
+
 // --------------- React Hook ---------------
 
 export function useTeamStore() {

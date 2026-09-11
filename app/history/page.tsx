@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getMatchHistory, clearMatchHistory } from '@/lib/store';
+import { getMatchHistory, clearMatchHistory, clearAllData, getTeams } from '@/lib/store';
 import type { MatchRecord } from '@/lib/types';
 import { PinDialog } from '@/components/PinDialog';
 
@@ -81,6 +81,7 @@ export default function HistoryPage() {
   };
 
   const [pinDialogOpen, setPinDialogOpen] = useState(false);
+  const [confirmClearOpen, setConfirmClearOpen] = useState(false);
 
   const handleClearHistory = () => {
     if (history.length === 0) return;
@@ -91,8 +92,7 @@ export default function HistoryPage() {
     setPinDialogOpen(false);
     const correctPin = process.env.NEXT_PUBLIC_CLEAR_HISTORY_PIN || '23249';
     if (pin === correctPin) {
-      clearMatchHistory();
-      setHistory([]);
+      setConfirmClearOpen(true);
     } else if (pin) {
       alert('Incorrect PIN.');
     }
@@ -100,6 +100,30 @@ export default function HistoryPage() {
 
   const onCancelClear = () => {
     setPinDialogOpen(false);
+  };
+
+  const handleExportData = () => {
+    const dataStr = JSON.stringify(
+      {
+        teams: getTeams(),
+        history: getMatchHistory(),
+      },
+      null,
+      2
+    );
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `electro_combat_backup_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleFinalClear = () => {
+    clearAllData();
+    setHistory([]);
+    setConfirmClearOpen(false);
   };
 
   return (
@@ -270,6 +294,49 @@ export default function HistoryPage() {
         onConfirm={onConfirmClear}
         onCancel={onCancelClear}
       />
+
+      {/* Confirmation Modal */}
+      {confirmClearOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+          <div className="panel-glow w-full max-w-md bg-background/95 border-neon-red/50 shadow-[0_0_30px_rgba(255,51,102,0.2)]">
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-neon-red/10 border border-neon-red/20 mb-4 text-2xl">
+                ⚠️
+              </div>
+              <h2 className="font-mono text-xl font-bold text-neon-red tracking-wide mb-2">
+                WARNING: DATA LOSS
+              </h2>
+              <p className="text-sm text-muted">
+                You are about to permanently delete all match history AND all team data. This action cannot be undone.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={handleExportData}
+                className="btn-neon btn-yellow w-full text-xs py-2.5"
+              >
+                📥 EXPORT DATA BACKUP
+              </button>
+              
+              <div className="flex gap-3 mt-2">
+                <button
+                  onClick={() => setConfirmClearOpen(false)}
+                  className="flex-1 btn-neon w-full text-xs py-2.5 bg-background text-foreground"
+                >
+                  CANCEL
+                </button>
+                <button
+                  onClick={handleFinalClear}
+                  className="flex-1 btn-neon w-full text-xs py-2.5 !text-neon-red !border-neon-red hover:!bg-neon-red/10 shadow-[0_0_10px_rgba(255,51,102,0.5)]"
+                >
+                  PERMANENTLY DELETE
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
