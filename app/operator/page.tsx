@@ -24,6 +24,25 @@ export default function OperatorPage() {
   const timer = useTimer();
   const store = useTeamStore();
 
+  const handleHomeNavigation = (e: React.MouseEvent) => {
+    if (timer.state.phase !== 'idle') {
+      e.preventDefault();
+      alert("A match is currently ongoing! Please end or resolve the match before leaving the operator dashboard.");
+    }
+  };
+
+  // Prevent accidental tab close/refresh during match
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (timer.state.phase !== 'idle') {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [timer.state.phase]);
+
   // Team selection
   const [selectedTeamAId, setSelectedTeamAId] = useState('');
   const [selectedTeamBId, setSelectedTeamBId] = useState('');
@@ -280,7 +299,11 @@ export default function OperatorPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <Link href="/" className="text-muted text-xs font-mono tracking-wider hover:text-neon-cyan transition-colors">
+          <Link 
+            href="/" 
+            onClick={handleHomeNavigation}
+            className="text-muted text-xs font-mono tracking-wider hover:text-neon-cyan transition-colors"
+          >
             ← HOME
           </Link>
           <h1 className="font-mono text-xl md:text-2xl font-bold neon-text-cyan mt-1 tracking-wide">
