@@ -86,40 +86,37 @@ export function useTimer() {
   const startMainTicker = useCallback(() => {
     clearInterval_();
     intervalRef.current = setInterval(() => {
-      let ended = false;
-      let isKnockout = false;
+      const current = stateRef.current;
+      let isKnockoutA = current.recoveryTimeA !== null && current.recoveryTimeA <= 1;
+      let isKnockoutB = current.recoveryTimeB !== null && current.recoveryTimeB <= 1;
+      let isKnockout = isKnockoutA || isKnockoutB;
+      let ended = !isKnockout && current.mainTime <= 1;
+
       setState((prev) => {
         const next = { ...prev };
-        
-        // Tick recovery A
-        if (next.recoveryTimeA !== null) {
+
+        // Handle Team A Recovery
+        if (isKnockoutA) {
+          next.recoveryTimeA = 0;
+          next.phase = 'knockout';
+        } else if (next.recoveryTimeA !== null && !isKnockoutB) {
           next.recoveryTimeA -= 1;
-          if (next.recoveryTimeA <= 0) {
-            next.recoveryTimeA = 0;
-            next.phase = 'knockout';
-            isKnockout = true;
-          }
         }
 
-        // Tick recovery B
-        if (next.recoveryTimeB !== null) {
+        // Handle Team B Recovery
+        if (isKnockoutB) {
+          next.recoveryTimeB = 0;
+          next.phase = 'knockout';
+        } else if (next.recoveryTimeB !== null && !isKnockoutA) {
           next.recoveryTimeB -= 1;
-          if (next.recoveryTimeB <= 0) {
-            next.recoveryTimeB = 0;
-            next.phase = 'knockout';
-            isKnockout = true;
-          }
         }
 
-        // Tick main time if not already knocked out
-        if (!isKnockout) {
-          if (next.mainTime <= 1) {
-            next.mainTime = 0;
-            next.phase = 'finished';
-            ended = true;
-          } else {
-            next.mainTime -= 1;
-          }
+        // Handle Main Time
+        if (ended) {
+          next.mainTime = 0;
+          next.phase = 'finished';
+        } else if (!isKnockout) {
+          next.mainTime -= 1;
         }
 
         return next;
@@ -279,6 +276,8 @@ export function useTimer() {
         ...prev,
         phase: 'result',
         matchResult: { result, winnerName },
+        recoveryTimeA: null,
+        recoveryTimeB: null,
       }));
     },
     []

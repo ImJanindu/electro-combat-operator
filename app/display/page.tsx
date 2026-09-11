@@ -149,9 +149,6 @@ export default function DisplayPage() {
                 <h2 className="font-mono text-5xl md:text-7xl lg:text-8xl font-black neon-text-yellow animate-pulse-glow">
                   DRAW
                 </h2>
-                <p className="font-mono text-lg md:text-xl tracking-[0.2em] text-neon-yellow mt-4">
-                  🤝 Both teams earn 0.5 points
-                </p>
               </>
             ) : (
               <>
@@ -161,9 +158,6 @@ export default function DisplayPage() {
                 <h2 className="font-mono text-5xl md:text-7xl lg:text-8xl font-black neon-text-green animate-pulse-glow">
                   {state.matchResult.winnerName}
                 </h2>
-                <p className="font-mono text-lg md:text-xl tracking-[0.2em] text-neon-green mt-4">
-                  🏆 +1 POINT
-                </p>
               </>
             )}
           </div>
