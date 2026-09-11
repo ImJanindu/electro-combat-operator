@@ -36,7 +36,6 @@ export default function DisplayPage() {
             isRecovery ? 'bg-neon-red/12' :
             isKnockout ? 'bg-neon-red/20' :
             isResult ? 'bg-neon-yellow/10' :
-            isShowLeaderboard ? 'bg-neon-yellow/8' :
             'bg-neon-blue/5'
           }`}
         />
