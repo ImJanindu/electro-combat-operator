@@ -26,6 +26,9 @@ export default function DisplayPage() {
   // Determine which "active match" phases to show (timer display)
   const isMatchPhase = !isIdle && !isCountdown && !isResult;
 
+  const elapsedTime = state.maxTime - state.mainTime;
+  const showTrapDoors = isMatchPhase && elapsedTime >= 60 && elapsedTime < 65;
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden scanlines select-none cursor-default">
       {/* Ambient background effects */}
@@ -57,6 +60,18 @@ export default function DisplayPage() {
       {isKnockout && (
         <div className="fixed inset-0 knockout-overlay pointer-events-none z-10" />
       )}
+      
+      {/* Trap Doors Alert */}
+      {showTrapDoors && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 animate-bounce">
+          <div className="bg-neon-red/20 border-2 border-neon-red px-8 py-4 rounded-xl backdrop-blur-sm">
+            <h2 className="font-mono text-3xl md:text-5xl font-black text-neon-red tracking-widest uppercase animate-pulse-glow text-center">
+              ⚠ TRAP DOORS OPEN ⚠
+            </h2>
+          </div>
+        </div>
+      )}
+
       {/* Top Logo */}
       <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50">
         <img src="/logo.png" alt="ElectroCombat Logo" className="h-32 md:h-48 lg:h-56 w-auto opacity-90 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]" />
@@ -232,8 +247,8 @@ export default function DisplayPage() {
               {/* Team A Recovery */}
               {(state.recoveryTimeA !== null || (isKnockout && state.recoveryTimeA === 0)) && (
                 <div className={`inline-block rounded-lg px-8 py-4 bg-surface/80 ${state.recoveryTimeA === 0 ? 'neon-border-red' : 'neon-border-yellow'}`}>
-                  <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-neon-yellow uppercase mb-2">
-                    {state.recoveryTimeA === 0 ? '💀 KNOCKOUT' : '⚠ RECOVERY'}
+                  <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-neon-yellow uppercase mb-2 truncate max-w-[250px]">
+                    {state.recoveryTimeA === 0 ? `💀 ${state.teamA?.name || 'TEAM A'} KNOCKOUT` : `⚠ ${state.teamA?.name || 'TEAM A'} RECOVERY`}
                   </p>
                   <div
                     className={`timer-display text-5xl md:text-7xl font-black ${
@@ -247,8 +262,8 @@ export default function DisplayPage() {
               {/* Team B Recovery */}
               {(state.recoveryTimeB !== null || (isKnockout && state.recoveryTimeB === 0)) && (
                 <div className={`inline-block rounded-lg px-8 py-4 bg-surface/80 ${state.recoveryTimeB === 0 ? 'neon-border-red' : 'neon-border-yellow'}`}>
-                  <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-neon-yellow uppercase mb-2">
-                    {state.recoveryTimeB === 0 ? '💀 KNOCKOUT' : '⚠ RECOVERY'}
+                  <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-neon-yellow uppercase mb-2 truncate max-w-[250px]">
+                    {state.recoveryTimeB === 0 ? `💀 ${state.teamB?.name || 'TEAM B'} KNOCKOUT` : `⚠ ${state.teamB?.name || 'TEAM B'} RECOVERY`}
                   </p>
                   <div
                     className={`timer-display text-5xl md:text-7xl font-black ${
