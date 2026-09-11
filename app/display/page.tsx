@@ -76,27 +76,6 @@ export default function DisplayPage() {
       {isKnockout && (
         <div className="fixed inset-0 knockout-overlay pointer-events-none z-10" />
       )}
-
-      {/* Fullscreen Toggle */}
-      <button 
-        onClick={() => {
-          if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(() => {});
-          } else {
-            document.exitFullscreen();
-          }
-        }}
-        className="absolute top-4 right-4 z-50 p-2 text-muted hover:text-neon-cyan transition-colors"
-        title="Toggle Fullscreen"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M8 3H5a2 2 0 0 0-2 2v3" />
-          <path d="M21 8V5a2 2 0 0 0-2-2h-3" />
-          <path d="M3 16v3a2 2 0 0 0 2 2h3" />
-          <path d="M16 21h3a2 2 0 0 0 2-2v-3" />
-        </svg>
-      </button>
-
       {/* Top Logo */}
       <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50">
         <img src="/logo.png" alt="ElectroCombat Logo" className="h-32 md:h-48 lg:h-56 w-auto opacity-90 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]" />
