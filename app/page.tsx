@@ -23,7 +23,7 @@ const NAV_ITEMS = [
 
 export default function HomePage() {
   return (
-    <div 
+    <div
       className="min-h-screen flex flex-col items-center justify-center p-6 scanlines"
       suppressHydrationWarning
     >
@@ -78,9 +78,9 @@ export default function HomePage() {
           <p>OFFLINE-CAPABLE • BROADCAST SYNC • v3.0</p>
           <p>
             DEVELOPED BY{' '}
-            <a 
-              href="https://linkedin.com/in/imjanindu" 
-              target="_blank" 
+            <a
+              href="https://linkedin.com/in/imjanindu"
+              target="_blank"
               rel="noopener noreferrer"
               className="text-neon-blue hover:underline hover:text-neon-blue/80 transition-colors"
             >

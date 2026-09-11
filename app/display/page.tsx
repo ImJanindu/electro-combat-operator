@@ -76,12 +76,11 @@ export default function DisplayPage() {
       {/* Top Logo - Hide when trap doors open to prevent collision */}
       {!showTrapDoors && (
         <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-top-4 duration-500">
-          <img 
-            src="/logo.png" 
-            alt="ElectroCombat Logo" 
-            className={`w-auto opacity-90 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)] transition-all duration-700 ease-in-out ${
-              isIdle ? 'h-48 md:h-64 lg:h-80 mt-8' : 'h-32 md:h-48 lg:h-56'
-            }`} 
+          <img
+            src="/logo.png"
+            alt="ElectroCombat Logo"
+            className={`w-auto opacity-90 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)] transition-all duration-700 ease-in-out ${isIdle ? 'h-48 md:h-64 lg:h-80 mt-8' : 'h-32 md:h-48 lg:h-56'
+              }`}
           />
         </div>
       )}

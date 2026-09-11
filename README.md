@@ -1,5 +1,8 @@
 # Electro Combat Operator
 
+
+> **This is the `timer-only` branch.** This branch contains a minimal version of the application, focusing exclusively on the core Operator Panel, Match Timer, and Audience Display. Advanced features such as Match History, Leaderboards, and JSON Export functions are available on the `main` branch.
+
 **Electro Combat Operator** is a high-tech, offline-capable desktop match management system designed specifically for robotic combat tournaments. It features a sophisticated dual-dashboard architecture that empowers tournament operators to control match timers, track scores, and resolve knockouts with precision, while seamlessly broadcasting real-time, synchronized match data to a visually stunning Audience Display.
 
 ## 🎓 Event Details
