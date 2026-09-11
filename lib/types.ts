@@ -61,11 +61,11 @@ export interface TimerState {
   phase: TimerPhase;
   mainTime: number;          // Remaining seconds on the main clock
   maxTime: number;           // Total match duration (default 180)
-  recoveryTime: number;      // Remaining seconds on recovery clock
+  recoveryTimeA: number | null; // Remaining seconds for Team A recovery, null if not active
+  recoveryTimeB: number | null; // Remaining seconds for Team B recovery, null if not active
   countdownValue: number;    // 3, 2, 1, or 0 during pre-start
   teamA: { id: string; name: string } | null;
   teamB: { id: string; name: string } | null;
-  knockoutTeam: 'A' | 'B' | null;   // Which team's robot is being recovered
   matchResult: {                     // Set after match resolution
     result: MatchResult;
     winnerName: string;              // Winner team name or 'Draw'

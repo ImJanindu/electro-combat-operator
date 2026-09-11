@@ -20,7 +20,7 @@ export default function DisplayPage() {
   const isCountdown = phase === 'countdown';
   const isRunning = phase === 'running';
   const isPaused = phase === 'paused';
-  const isRecovery = phase === 'recovery';
+  const isRecovery = state.recoveryTimeA !== null || state.recoveryTimeB !== null;
   const isKnockout = phase === 'knockout';
   const isFinished = phase === 'finished';
   const isStopped = phase === 'stopped';
@@ -54,17 +54,17 @@ export default function DisplayPage() {
             isKnockout ? 'bg-neon-red/20' :
             isResult ? 'bg-neon-yellow/10' :
             isShowLeaderboard ? 'bg-neon-yellow/8' :
-            'bg-neon-cyan/5'
+            'bg-neon-blue/5'
           }`}
         />
         <div
           className={`absolute bottom-0 right-1/4 w-[600px] h-[600px] rounded-full blur-[180px] transition-all duration-1000 ${
-            isRunning ? 'bg-neon-cyan/5' :
+            isRunning ? 'bg-neon-blue/5' :
             isRecovery ? 'bg-neon-orange/10' :
             isKnockout ? 'bg-neon-red/15' :
-            isResult ? 'bg-neon-cyan/8' :
-            isShowLeaderboard ? 'bg-neon-cyan/5' :
-            'bg-neon-magenta/5'
+            isResult ? 'bg-neon-blue/8' :
+            isShowLeaderboard ? 'bg-neon-blue/5' :
+            'bg-neon-red/5'
           }`}
         />
       </div>
@@ -90,7 +90,7 @@ export default function DisplayPage() {
           <h1 className="font-mono text-5xl md:text-7xl font-black neon-text-cyan animate-neon-flicker tracking-tight">
             ELECTRO COMBAT 2.0
           </h1>
-          <p className="font-mono text-sm tracking-[0.25em] text-neon-magenta mt-4 uppercase">
+          <p className="font-mono text-sm tracking-[0.25em] text-neon-red mt-4 uppercase">
             Waiting for operator...
           </p>
         </div>
@@ -103,16 +103,16 @@ export default function DisplayPage() {
           <div className="flex items-center justify-center gap-8 md:gap-16 mb-12">
             <div className="text-right">
               <p className="font-mono text-xs tracking-[0.3em] text-muted uppercase">Team A</p>
-              <p className="font-mono text-2xl md:text-4xl font-bold neon-text-cyan mt-1 truncate max-w-[280px]">
+              <p className="font-mono text-2xl md:text-4xl font-bold neon-text-blue mt-1 truncate max-w-[280px]">
                 {state.teamA?.name || '—'}
               </p>
             </div>
-            <span className="font-mono text-2xl md:text-3xl text-neon-magenta font-black tracking-widest animate-pulse-glow">
+            <span className="font-mono text-2xl md:text-3xl text-neon-red font-black tracking-widest animate-pulse-glow">
               VS
             </span>
             <div className="text-left">
               <p className="font-mono text-xs tracking-[0.3em] text-muted uppercase">Team B</p>
-              <p className="font-mono text-2xl md:text-4xl font-bold neon-text-magenta mt-1 truncate max-w-[280px]">
+              <p className="font-mono text-2xl md:text-4xl font-bold neon-text-red mt-1 truncate max-w-[280px]">
                 {state.teamB?.name || '—'}
               </p>
             </div>
@@ -121,7 +121,7 @@ export default function DisplayPage() {
           {/* Countdown number */}
           <div
             key={state.countdownValue}
-            className="timer-display text-[10rem] md:text-[14rem] font-black neon-text-cyan animate-countdown-zoom leading-none"
+            className="timer-display text-[10rem] md:text-[14rem] font-black neon-text-blue animate-countdown-zoom leading-none"
           >
             {state.countdownValue}
           </div>
@@ -143,7 +143,7 @@ export default function DisplayPage() {
                 {state.teamA?.name || '—'}
               </p>
             </div>
-            <span className="font-mono text-lg md:text-2xl text-neon-magenta font-black tracking-widest px-4 shrink-0">
+            <span className="font-mono text-lg md:text-2xl text-neon-red font-black tracking-widest px-4 shrink-0">
               VS
             </span>
             <div className="text-right flex-1">
@@ -298,18 +298,18 @@ export default function DisplayPage() {
               <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-muted uppercase">
                 Team A
               </p>
-              <p className="font-mono text-xl md:text-3xl lg:text-4xl font-bold neon-text-cyan mt-1 truncate">
+              <p className="font-mono text-xl md:text-3xl lg:text-4xl font-bold neon-text-blue mt-1 truncate">
                 {state.teamA?.name || '—'}
               </p>
             </div>
-            <span className="font-mono text-lg md:text-2xl text-neon-magenta font-black tracking-widest px-4 shrink-0">
+            <span className="font-mono text-lg md:text-2xl text-neon-red font-black tracking-widest px-4 shrink-0">
               VS
             </span>
             <div className="text-right flex-1">
               <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-muted uppercase">
                 Team B
               </p>
-              <p className="font-mono text-xl md:text-3xl lg:text-4xl font-bold neon-text-magenta mt-1 truncate">
+              <p className="font-mono text-xl md:text-3xl lg:text-4xl font-bold neon-text-red mt-1 truncate">
                 {state.teamB?.name || '—'}
               </p>
             </div>
@@ -321,7 +321,7 @@ export default function DisplayPage() {
               isRunning ? 'neon-text-green' :
               isPaused ? 'neon-text-yellow animate-pulse-glow' :
               isRecovery ? 'neon-text-yellow animate-pulse-glow' :
-              isFinished ? 'neon-text-cyan' :
+              isFinished ? 'neon-text-blue' :
               isKnockout ? 'neon-text-red animate-knockout-pulse' :
               isStopped ? 'neon-text-red' :
               'text-foreground/40'
@@ -337,7 +337,7 @@ export default function DisplayPage() {
               isPaused ? 'text-neon-yellow' :
               isRecovery ? 'text-neon-red animate-pulse-glow' :
               isKnockout ? 'text-neon-red' :
-              isFinished ? 'text-neon-cyan' :
+              isFinished ? 'text-neon-blue' :
               isStopped ? 'text-neon-red' :
               'text-muted'
             }`}
@@ -350,26 +350,39 @@ export default function DisplayPage() {
             {phase === 'stopped' && '🛑 EMERGENCY STOP'}
           </p>
 
-          {/* Recovery Timer */}
+          {/* Recovery Timers */}
           {(isRecovery || isKnockout) && (
-            <div className="mt-8 md:mt-12 animate-slide-up">
-              <div className="inline-block rounded-lg px-8 py-4 neon-border-red bg-surface/80">
-                <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-neon-red uppercase mb-2">
-                  {isKnockout ? '💀 KNOCKOUT — RECOVERY FAILED' : '⚠ RECOVERY COUNTDOWN'}
-                </p>
-                <div
-                  className={`timer-display text-5xl md:text-7xl font-black neon-text-red ${
-                    isRecovery ? 'animate-pulse-glow' : 'animate-knockout-pulse'
-                  }`}
-                >
-                  {formatTime(state.recoveryTime)}
-                </div>
-                {state.knockoutTeam && (
-                  <p className="font-mono text-xs md:text-sm text-muted mt-2">
-                    {state.knockoutTeam === 'A' ? state.teamA?.name : state.teamB?.name}
+            <div className="mt-8 md:mt-12 animate-slide-up flex flex-col md:flex-row gap-4 justify-center">
+              {/* Team A Recovery */}
+              {(state.recoveryTimeA !== null || (isKnockout && state.recoveryTimeA === 0)) && (
+                <div className={`inline-block rounded-lg px-8 py-4 bg-surface/80 ${state.recoveryTimeA === 0 ? 'neon-border-red' : 'neon-border-yellow'}`}>
+                  <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-neon-yellow uppercase mb-2">
+                    {state.recoveryTimeA === 0 ? '💀 KNOCKOUT' : '⚠ RECOVERY'}
                   </p>
-                )}
-              </div>
+                  <div
+                    className={`timer-display text-5xl md:text-7xl font-black ${
+                      state.recoveryTimeA === 0 ? 'neon-text-red animate-knockout-pulse' : 'neon-text-yellow animate-pulse-glow'
+                    }`}
+                  >
+                    {formatTime(state.recoveryTimeA!)}
+                  </div>
+                </div>
+              )}
+              {/* Team B Recovery */}
+              {(state.recoveryTimeB !== null || (isKnockout && state.recoveryTimeB === 0)) && (
+                <div className={`inline-block rounded-lg px-8 py-4 bg-surface/80 ${state.recoveryTimeB === 0 ? 'neon-border-red' : 'neon-border-yellow'}`}>
+                  <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-neon-yellow uppercase mb-2">
+                    {state.recoveryTimeB === 0 ? '💀 KNOCKOUT' : '⚠ RECOVERY'}
+                  </p>
+                  <div
+                    className={`timer-display text-5xl md:text-7xl font-black ${
+                      state.recoveryTimeB === 0 ? 'neon-text-red animate-knockout-pulse' : 'neon-text-yellow animate-pulse-glow'
+                    }`}
+                  >
+                    {formatTime(state.recoveryTimeB!)}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -378,3 +391,4 @@ export default function DisplayPage() {
     </div>
   );
 }
+

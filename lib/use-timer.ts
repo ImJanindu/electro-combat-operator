@@ -12,18 +12,18 @@ import { playCountdownBeep, playBuzzer, playSiren, playKnockout } from './audio'
 
 const CHANNEL_NAME = 'electro-combat-timer';
 const DEFAULT_MATCH_TIME = 180; // 3 minutes
-const RECOVERY_TIME = 30;
+const RECOVERY_TIME = 15;
 
 function createInitialState(): TimerState {
   return {
     phase: 'idle',
     mainTime: DEFAULT_MATCH_TIME,
     maxTime: DEFAULT_MATCH_TIME,
-    recoveryTime: RECOVERY_TIME,
+    recoveryTimeA: null,
+    recoveryTimeB: null,
     countdownValue: 3,
     teamA: null,
     teamB: null,
-    knockoutTeam: null,
     matchResult: null,
   };
 }
@@ -83,6 +83,60 @@ export function useTimer() {
     }
   }, []);
 
+  const startMainTicker = useCallback(() => {
+    clearInterval_();
+    intervalRef.current = setInterval(() => {
+      let ended = false;
+      let isKnockout = false;
+      setState((prev) => {
+        const next = { ...prev };
+        
+        // Tick recovery A
+        if (next.recoveryTimeA !== null) {
+          next.recoveryTimeA -= 1;
+          if (next.recoveryTimeA <= 0) {
+            next.recoveryTimeA = 0;
+            next.phase = 'knockout';
+            isKnockout = true;
+          }
+        }
+
+        // Tick recovery B
+        if (next.recoveryTimeB !== null) {
+          next.recoveryTimeB -= 1;
+          if (next.recoveryTimeB <= 0) {
+            next.recoveryTimeB = 0;
+            next.phase = 'knockout';
+            isKnockout = true;
+          }
+        }
+
+        // Tick main time if not already knocked out
+        if (!isKnockout) {
+          if (next.mainTime <= 1) {
+            next.mainTime = 0;
+            next.phase = 'finished';
+            ended = true;
+          } else {
+            next.mainTime -= 1;
+          }
+        }
+
+        return next;
+      });
+
+      if (isKnockout) {
+        clearInterval_();
+        playKnockout();
+        logEvent('knockout', 'Match ended by Knockout');
+      } else if (ended) {
+        clearInterval_();
+        playBuzzer();
+        logEvent('match_end', 'Timer reached zero');
+      }
+    }, 1000);
+  }, [clearInterval_, logEvent]);
+
   // ---- Pre-start 3-2-1 countdown ----
   const startCountdown = useCallback(() => {
     const s = stateRef.current;
@@ -111,25 +165,10 @@ export function useTimer() {
           phase: 'running',
           countdownValue: 0,
         }));
-        // Start main tick
-        intervalRef.current = setInterval(() => {
-          let ended = false;
-          setState((prev) => {
-            if (prev.mainTime <= 1) {
-              ended = true;
-              return { ...prev, mainTime: 0, phase: 'finished' };
-            }
-            return { ...prev, mainTime: prev.mainTime - 1 };
-          });
-          if (ended) {
-            clearInterval_();
-            playBuzzer();
-            logEvent('match_end', 'Timer reached zero');
-          }
-        }, 1000);
+        startMainTicker();
       }
     }, 1000);
-  }, [clearInterval_, logEvent]);
+  }, [clearInterval_, logEvent, startMainTicker]);
 
   // ---- Pause ----
   const pause = useCallback(() => {
@@ -138,29 +177,15 @@ export function useTimer() {
     setState((prev) => ({ ...prev, phase: 'paused' }));
   }, [clearInterval_, logEvent]);
 
-  // ---- Resume (from pause, not recovery) ----
+  // ---- Resume (from pause) ----
   const resume = useCallback(() => {
     const s = stateRef.current;
     if (s.phase !== 'paused') return;
     
     logEvent('resume', 'Match resumed');
     setState((prev) => ({ ...prev, phase: 'running' }));
-    intervalRef.current = setInterval(() => {
-      let ended = false;
-      setState((prev) => {
-        if (prev.mainTime <= 1) {
-          ended = true;
-          return { ...prev, mainTime: 0, phase: 'finished' };
-        }
-        return { ...prev, mainTime: prev.mainTime - 1 };
-      });
-      if (ended) {
-        clearInterval_();
-        playBuzzer();
-        logEvent('match_end', 'Timer reached zero');
-      }
-    }, 1000);
-  }, [clearInterval_, logEvent]);
+    startMainTicker();
+  }, [logEvent, startMainTicker]);
 
   // ---- Emergency stop ----
   const emergencyStop = useCallback(() => {
@@ -170,77 +195,42 @@ export function useTimer() {
     setState((prev) => ({ ...prev, phase: 'stopped' }));
   }, [clearInterval_, logEvent]);
 
-  // ---- Trigger 30s Recovery ----
-  const startRecovery = useCallback(
-    (team: 'A' | 'B') => {
-      const s = stateRef.current;
-      if (s.phase === 'recovery' || s.phase === 'knockout') return;
-
-      clearInterval_();
-      playSiren();
-      logEvent(
-        'recovery_start',
-        `Recovery started for Team ${team} (${team === 'A' ? stateRef.current.teamA?.name : stateRef.current.teamB?.name})`
-      );
-      setState((prev) => ({
-        ...prev,
-        phase: 'recovery',
-        recoveryTime: RECOVERY_TIME,
-        knockoutTeam: team,
-      }));
-
-      intervalRef.current = setInterval(() => {
-        let isKnockout = false;
-        let kTeam: 'A' | 'B' | null = null;
-        setState((prev) => {
-          if (prev.recoveryTime <= 1) {
-            isKnockout = true;
-            kTeam = prev.knockoutTeam;
-            return { ...prev, recoveryTime: 0, phase: 'knockout' };
-          }
-          return { ...prev, recoveryTime: prev.recoveryTime - 1 };
-        });
-        if (isKnockout) {
-          clearInterval_();
-          playKnockout();
-          logEvent('knockout', `Knockout! Team ${kTeam} failed to recover`);
-        }
-      }, 1000);
-    },
-    [clearInterval_, logEvent]
-  );
-
-  // ---- Resume from recovery ----
-  const recoverResume = useCallback(() => {
+  // ---- Toggle 15s Recovery ----
+  const toggleRecovery = useCallback((team: 'A' | 'B') => {
     const s = stateRef.current;
-    if (s.phase !== 'recovery') return;
+    if (s.phase !== 'running' && s.phase !== 'paused') return;
 
-    clearInterval_();
-    logEvent('recovery_resume', 'Robot recovered — match resuming');
-    setState((prev) => ({
-      ...prev,
-      phase: 'running',
-      recoveryTime: RECOVERY_TIME,
-      knockoutTeam: null,
-    }));
+    let startedRecovery = false;
 
-    // Resume main timer from where it left off
-    intervalRef.current = setInterval(() => {
-      let ended = false;
-      setState((prev) => {
-        if (prev.mainTime <= 1) {
-          ended = true;
-          return { ...prev, mainTime: 0, phase: 'finished' };
+    setState((prev) => {
+      const next = { ...prev };
+      if (team === 'A') {
+        if (next.recoveryTimeA === null) {
+           next.recoveryTimeA = RECOVERY_TIME;
+           startedRecovery = true;
+        } else {
+           next.recoveryTimeA = null;
         }
-        return { ...prev, mainTime: prev.mainTime - 1 };
-      });
-      if (ended) {
-        clearInterval_();
-        playBuzzer();
-        logEvent('match_end', 'Timer reached zero');
+      } else {
+        if (next.recoveryTimeB === null) {
+           next.recoveryTimeB = RECOVERY_TIME;
+           startedRecovery = true;
+        } else {
+           next.recoveryTimeB = null;
+        }
       }
-    }, 1000);
-  }, [clearInterval_, logEvent]);
+      return next;
+    });
+
+    setTimeout(() => {
+      if (startedRecovery) {
+         playSiren();
+         logEvent('recovery_start', `Recovery started for Team ${team}`);
+      } else {
+         logEvent('recovery_resume', `Robot recovered — Team ${team}`);
+      }
+    }, 0);
+  }, [logEvent]);
 
   // ---- +/- 1 second adjustments ----
   const adjustTime = useCallback(
@@ -320,8 +310,7 @@ export function useTimer() {
     pause,
     resume,
     emergencyStop,
-    startRecovery,
-    recoverResume,
+    toggleRecovery,
     adjustTime,
     setTeams,
     setMatchDuration,

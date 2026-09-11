@@ -15,11 +15,11 @@ const DEFAULT_STATE: TimerState = {
   phase: 'idle' as TimerPhase,
   mainTime: 180,
   maxTime: 180,
-  recoveryTime: 30,
+  recoveryTimeA: null,
+  recoveryTimeB: null,
   countdownValue: 3,
   teamA: null,
   teamB: null,
-  knockoutTeam: null,
   matchResult: null,
 };
 

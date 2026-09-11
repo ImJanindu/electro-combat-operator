@@ -125,7 +125,7 @@ export default function OperatorPage() {
       if (!timer.state.teamA || !timer.state.teamB) return;
 
       const record: MatchRecord = {
-        id: crypto.randomUUID(),
+        id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15),
         timestamp: Date.now(),
         teamAId: timer.state.teamA.id,
         teamAName: timer.state.teamA.name,
@@ -182,14 +182,14 @@ export default function OperatorPage() {
   const isIdle = phase === 'idle';
   const isRunning = phase === 'running';
   const isPaused = phase === 'paused';
-  const isRecovery = phase === 'recovery';
+  const isRecovery = timer.state.recoveryTimeA !== null || timer.state.recoveryTimeB !== null;
   const isKnockout = phase === 'knockout';
   const isFinished = phase === 'finished';
   const isStopped = phase === 'stopped';
   const isCountdown = phase === 'countdown';
   const isResult = phase === 'result';
   const isShowLeaderboard = phase === 'show_leaderboard';
-  const matchInProgress = isRunning || isPaused || isRecovery || isCountdown;
+  const matchInProgress = isRunning || isPaused || isCountdown;
   const matchEnded = isFinished || isKnockout || isStopped;
   const isPostMatch = isResult || isShowLeaderboard;
   const teamsSelected = !!selectedTeamAId && !!selectedTeamBId && selectedTeamAId !== selectedTeamBId;
@@ -249,8 +249,7 @@ export default function OperatorPage() {
       // Backspace — Trigger Recovery / Resume from Recovery
       if (key === 'backspace') {
         e.preventDefault();
-        if (isRunning) timer.startRecovery(recoveryTarget);
-        else if (isRecovery) timer.recoverResume();
+        if (isRunning || isPaused) timer.toggleRecovery(recoveryTarget);
         return;
       }
 
@@ -321,11 +320,11 @@ export default function OperatorPage() {
           <Link 
             href="/" 
             onClick={handleHomeNavigation}
-            className="text-muted text-xs font-mono tracking-wider hover:text-neon-cyan transition-colors"
+            className="text-muted text-xs font-mono tracking-wider hover:text-neon-blue transition-colors"
           >
             ← HOME
           </Link>
-          <h1 className="font-mono text-xl md:text-2xl font-bold neon-text-cyan mt-1 tracking-wide">
+          <h1 className="font-mono text-xl md:text-2xl font-bold neon-text-blue mt-1 tracking-wide">
             OPERATOR PANEL
           </h1>
         </div>
@@ -371,7 +370,7 @@ export default function OperatorPage() {
         {/* ====== LEFT COLUMN: Team Management ====== */}
         <div className="space-y-4">
           <div className="panel-glow">
-            <h2 className="font-mono text-sm font-bold tracking-wider text-neon-cyan mb-3">
+            <h2 className="font-mono text-sm font-bold tracking-wider text-neon-blue mb-3">
               TEAM ROSTER
             </h2>
             <div className="flex gap-2 mb-3">
@@ -385,7 +384,7 @@ export default function OperatorPage() {
               <button
                 onClick={handleAddTeam}
                 disabled={!newTeamName.trim()}
-                className="btn-neon btn-cyan text-[0.65rem] py-1.5"
+                className="btn-neon btn-blue text-[0.65rem] py-1.5"
               >
                 + ADD
               </button>
@@ -419,7 +418,7 @@ export default function OperatorPage() {
 
           {/* Match Setup */}
           <div className="panel-glow">
-            <h2 className="font-mono text-sm font-bold tracking-wider text-neon-cyan mb-3">
+            <h2 className="font-mono text-sm font-bold tracking-wider text-neon-blue mb-3">
               MATCH SETUP
             </h2>
             <div className="space-y-2">
@@ -443,7 +442,7 @@ export default function OperatorPage() {
                     ))}
                 </select>
               </div>
-              <div className="text-center text-neon-magenta font-mono text-xs font-bold tracking-widest">
+              <div className="text-center text-neon-red font-mono text-xs font-bold tracking-widest">
                 VS
               </div>
               <div>
@@ -495,7 +494,7 @@ export default function OperatorPage() {
               <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
                 <span
                   key={timer.state.countdownValue}
-                  className="timer-display text-8xl md:text-9xl font-black neon-text-cyan animate-countdown-zoom"
+                  className="timer-display text-8xl md:text-9xl font-black neon-text-blue animate-countdown-zoom"
                 >
                   {timer.state.countdownValue}
                 </span>
@@ -506,16 +505,16 @@ export default function OperatorPage() {
             <div className="flex items-center justify-between mb-4">
               <div className="text-left">
                 <p className="text-[0.6rem] font-mono text-muted tracking-widest">TEAM A</p>
-                <p className="font-mono text-sm font-bold neon-text-cyan truncate max-w-[120px]">
+                <p className="font-mono text-sm font-bold neon-text-blue truncate max-w-[120px]">
                   {timer.state.teamA?.name || '—'}
                 </p>
               </div>
-              <span className="font-mono text-xs text-neon-magenta font-bold tracking-widest">
+              <span className="font-mono text-xs text-neon-red font-bold tracking-widest">
                 VS
               </span>
               <div className="text-right">
                 <p className="text-[0.6rem] font-mono text-muted tracking-widest">TEAM B</p>
-                <p className="font-mono text-sm font-bold neon-text-magenta truncate max-w-[120px]">
+                <p className="font-mono text-sm font-bold neon-text-red truncate max-w-[120px]">
                   {timer.state.teamB?.name || '—'}
                 </p>
               </div>
@@ -526,7 +525,7 @@ export default function OperatorPage() {
               isRunning ? 'neon-text-green' :
               isPaused ? 'neon-text-yellow animate-pulse-glow' :
               isRecovery ? 'neon-text-yellow animate-pulse-glow' :
-              isFinished ? 'neon-text-cyan' :
+              isFinished ? 'neon-text-blue' :
               isKnockout ? 'neon-text-red animate-knockout-pulse' :
               isStopped ? 'neon-text-red' :
               'text-foreground/60'
@@ -540,7 +539,7 @@ export default function OperatorPage() {
               isPaused ? 'text-neon-yellow' :
               isRecovery ? 'text-neon-red animate-pulse-glow' :
               isKnockout ? 'text-neon-red' :
-              isFinished ? 'text-neon-cyan' :
+              isFinished ? 'text-neon-blue' :
               isStopped ? 'text-neon-red' :
               'text-muted'
             }`}>
@@ -556,29 +555,37 @@ export default function OperatorPage() {
           </div>
 
           {/* Recovery Timer */}
-          {(isRecovery || isKnockout) && (
-            <div className={`panel text-center animate-slide-up ${isKnockout ? 'neon-border-red' : 'neon-border-red'}`}>
-              <p className="font-mono text-[0.6rem] tracking-[0.3em] text-neon-red uppercase mb-2">
-                {isKnockout ? '💀 KNOCKOUT — RECOVERY FAILED' : '⚠ RECOVERY COUNTDOWN'}
-              </p>
-              <div className={`timer-display text-5xl font-black neon-text-red ${
-                isRecovery ? 'animate-pulse-glow' : 'animate-knockout-pulse'
-              }`}>
-                {formatTime(timer.state.recoveryTime)}
-              </div>
-              {timer.state.knockoutTeam && (
-                <p className="font-mono text-xs text-muted mt-2">
-                  Team {timer.state.knockoutTeam}: {timer.state.knockoutTeam === 'A'
-                    ? timer.state.teamA?.name
-                    : timer.state.teamB?.name}
-                </p>
+          {/* Recovery Timers */}
+          {(timer.state.recoveryTimeA !== null || timer.state.recoveryTimeB !== null || isKnockout) && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 animate-slide-up">
+              {/* Team A Recovery */}
+              {(timer.state.recoveryTimeA !== null || (isKnockout && timer.state.recoveryTimeA === 0)) && (
+                <div className={`panel text-center ${timer.state.recoveryTimeA === 0 ? 'neon-border-red' : 'neon-border-yellow'}`}>
+                  <p className="font-mono text-[0.6rem] tracking-[0.3em] text-neon-yellow uppercase mb-2">
+                    {timer.state.recoveryTimeA === 0 ? '💀 KNOCKOUT' : '⚠ RECOVERY (A)'}
+                  </p>
+                  <div className={`timer-display text-4xl md:text-5xl font-black ${timer.state.recoveryTimeA === 0 ? 'neon-text-red animate-knockout-pulse' : 'neon-text-yellow animate-pulse-glow'}`}>
+                    {formatTime(timer.state.recoveryTimeA!)}
+                  </div>
+                </div>
+              )}
+              {/* Team B Recovery */}
+              {(timer.state.recoveryTimeB !== null || (isKnockout && timer.state.recoveryTimeB === 0)) && (
+                <div className={`panel text-center ${timer.state.recoveryTimeB === 0 ? 'neon-border-red' : 'neon-border-yellow'}`}>
+                  <p className="font-mono text-[0.6rem] tracking-[0.3em] text-neon-yellow uppercase mb-2">
+                    {timer.state.recoveryTimeB === 0 ? '💀 KNOCKOUT' : '⚠ RECOVERY (B)'}
+                  </p>
+                  <div className={`timer-display text-4xl md:text-5xl font-black ${timer.state.recoveryTimeB === 0 ? 'neon-text-red animate-knockout-pulse' : 'neon-text-yellow animate-pulse-glow'}`}>
+                    {formatTime(timer.state.recoveryTimeB!)}
+                  </div>
+                </div>
               )}
             </div>
           )}
 
           {/* Control Buttons */}
           <div className="panel-glow">
-            <h2 className="font-mono text-sm font-bold tracking-wider text-neon-cyan mb-3">
+            <h2 className="font-mono text-sm font-bold tracking-wider text-neon-blue mb-3">
               CONTROLS
             </h2>
             <div className="grid grid-cols-2 gap-2">
@@ -586,7 +593,7 @@ export default function OperatorPage() {
               <button
                 onClick={handleStart}
                 disabled={!teamsSelected || !isIdle}
-                className="btn-neon btn-solid-cyan col-span-2 py-3 text-sm"
+                className="btn-neon btn-solid-blue col-span-2 py-3 text-sm"
               >
                 ▶ START MATCH
               </button>
@@ -611,14 +618,14 @@ export default function OperatorPage() {
               <button
                 onClick={() => timer.adjustTime(-1)}
                 disabled={!matchInProgress && !isPaused}
-                className="btn-neon btn-cyan"
+                className="btn-neon btn-blue"
               >
                 −1 SEC
               </button>
               <button
                 onClick={() => timer.adjustTime(1)}
                 disabled={!matchInProgress && !isPaused}
-                className="btn-neon btn-cyan"
+                className="btn-neon btn-blue"
               >
                 +1 SEC
               </button>
@@ -651,7 +658,7 @@ export default function OperatorPage() {
                   <button
                     onClick={() => setRecoveryTarget('A')}
                     className={`flex-1 btn-neon text-[0.65rem] py-1.5 ${
-                      recoveryTarget === 'A' ? 'btn-cyan' : 'border-border text-muted'
+                      recoveryTarget === 'A' ? 'btn-blue' : 'border-border text-muted'
                     }`}
                   >
                     Team A
@@ -659,7 +666,7 @@ export default function OperatorPage() {
                   <button
                     onClick={() => setRecoveryTarget('B')}
                     className={`flex-1 btn-neon text-[0.65rem] py-1.5 ${
-                      recoveryTarget === 'B' ? 'btn-magenta' : 'border-border text-muted'
+                      recoveryTarget === 'B' ? 'btn-red' : 'border-border text-muted'
                     }`}
                   >
                     Team B
@@ -668,19 +675,11 @@ export default function OperatorPage() {
               </div>
 
               <button
-                onClick={() => timer.startRecovery(recoveryTarget)}
-                disabled={!isRunning}
+                onClick={() => timer.toggleRecovery(recoveryTarget)}
+                disabled={!isRunning && !isPaused}
                 className="btn-neon btn-red w-full py-2.5 mt-2"
               >
-                ⚡ TRIGGER 30s RECOVERY
-              </button>
-
-              <button
-                onClick={timer.recoverResume}
-                disabled={!isRecovery}
-                className="btn-neon btn-green w-full py-2.5"
-              >
-                ✓ RECOVERED / RESUME
+                ⚡ TOGGLE 15s RECOVERY
               </button>
             </div>
           </div>
@@ -694,13 +693,13 @@ export default function OperatorPage() {
               <div className="space-y-2 animate-slide-up">
                 <button
                   onClick={() => handleResolve('teamA')}
-                  className="btn-neon btn-cyan w-full py-2.5"
+                  className="btn-neon btn-blue w-full py-2.5"
                 >
                   🏆 {timer.state.teamA?.name || 'Team A'} WINS
                 </button>
                 <button
                   onClick={() => handleResolve('teamB')}
-                  className="btn-neon btn-magenta w-full py-2.5"
+                  className="btn-neon btn-red w-full py-2.5"
                 >
                   🏆 {timer.state.teamB?.name || 'Team B'} WINS
                 </button>
@@ -733,12 +732,12 @@ export default function OperatorPage() {
           {/* Display Control — visible after match resolution */}
           {isPostMatch && (
             <div className="panel-glow animate-slide-up">
-              <h2 className="font-mono text-sm font-bold tracking-wider text-neon-cyan mb-3">
+              <h2 className="font-mono text-sm font-bold tracking-wider text-neon-blue mb-3">
                 📺 DISPLAY CONTROL
               </h2>
               <div className="space-y-2">
                 <p className="text-[0.65rem] text-muted font-mono mb-2">
-                  Currently showing: <span className={isResult ? 'neon-text-yellow' : 'neon-text-cyan'}>
+                  Currently showing: <span className={isResult ? 'neon-text-yellow' : 'neon-text-blue'}>
                     {isResult ? 'MATCH RESULT' : 'LEADERBOARD'}
                   </span>
                 </p>
@@ -767,7 +766,7 @@ export default function OperatorPage() {
                     setSelectedTeamAId('');
                     setSelectedTeamBId('');
                   }}
-                  className="btn-neon btn-cyan w-full py-2.5"
+                  className="btn-neon btn-blue w-full py-2.5"
                 >
                   ⏹ RETURN TO IDLE
                 </button>
@@ -790,7 +789,7 @@ export default function OperatorPage() {
                     <span className={`${
                       evt.type === 'knockout' ? 'text-neon-red' :
                       evt.type === 'recovery_start' ? 'text-neon-orange' :
-                      evt.type === 'match_start' || evt.type === 'match_end' ? 'text-neon-cyan' :
+                      evt.type === 'match_start' || evt.type === 'match_end' ? 'text-neon-blue' :
                       'text-foreground/70'
                     }`}>
                       {evt.description}
@@ -812,3 +811,4 @@ export default function OperatorPage() {
     </div>
   );
 }
+

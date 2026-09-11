@@ -40,7 +40,7 @@ export function PinDialog({ isOpen, title, onConfirm, onCancel }: PinDialogProps
             placeholder="Enter PIN"
             value={pin}
             onChange={(e) => setPin(e.target.value)}
-            className="w-full bg-background border border-border rounded-lg px-4 py-2 font-mono text-foreground mb-6 focus:outline-none focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan transition-colors"
+            className="w-full bg-background border border-border rounded-lg px-4 py-2 font-mono text-foreground mb-6 focus:outline-none focus:border-neon-blue focus:ring-1 focus:ring-neon-blue transition-colors"
           />
           
           <div className="flex gap-3 justify-end">
@@ -53,7 +53,7 @@ export function PinDialog({ isOpen, title, onConfirm, onCancel }: PinDialogProps
             </button>
             <button
               type="submit"
-              className="px-4 py-2 font-mono text-sm font-bold bg-neon-cyan text-background rounded hover:bg-cyan-400 transition-colors"
+              className="px-4 py-2 font-mono text-sm font-bold bg-neon-blue text-background rounded hover:bg-blue-400 transition-colors"
             >
               CONFIRM
             </button>
@@ -63,3 +63,4 @@ export function PinDialog({ isOpen, title, onConfirm, onCancel }: PinDialogProps
     </div>
   );
 }
+

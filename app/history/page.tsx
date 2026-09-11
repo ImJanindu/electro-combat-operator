@@ -32,9 +32,9 @@ function formatDatetime(ts: number): string {
 function resultLabel(record: MatchRecord): { text: string; color: string } {
   switch (record.result) {
     case 'teamA':
-      return { text: `${record.teamAName} wins`, color: 'neon-text-cyan' };
+      return { text: `${record.teamAName} wins`, color: 'neon-text-blue' };
     case 'teamB':
-      return { text: `${record.teamBName} wins`, color: 'neon-text-magenta' };
+      return { text: `${record.teamBName} wins`, color: 'neon-text-red' };
     case 'draw':
       return { text: 'Draw', color: 'neon-text-yellow' };
   }
@@ -131,7 +131,7 @@ export default function HistoryPage() {
       {/* Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-neon-green/5 blur-[120px]" />
-        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 rounded-full bg-neon-cyan/5 blur-[120px]" />
+        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 rounded-full bg-neon-blue/5 blur-[120px]" />
       </div>
 
       <div className="relative z-10 max-w-3xl mx-auto">
@@ -140,7 +140,7 @@ export default function HistoryPage() {
           <div>
             <Link
               href="/"
-              className="text-muted text-xs font-mono tracking-wider hover:text-neon-cyan transition-colors"
+              className="text-muted text-xs font-mono tracking-wider hover:text-neon-blue transition-colors"
             >
               ← HOME
             </Link>
@@ -172,7 +172,7 @@ export default function HistoryPage() {
           <div className="panel-glow text-center py-16">
             <p className="font-mono text-muted text-sm">
               No matches played yet. Start a match from the{' '}
-              <Link href="/operator" className="text-neon-cyan hover:underline">
+              <Link href="/operator" className="text-neon-blue hover:underline">
                 Operator Panel
               </Link>
               .
@@ -198,13 +198,13 @@ export default function HistoryPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-mono text-sm font-bold neon-text-cyan">
+                          <span className="font-mono text-sm font-bold neon-text-blue">
                             {record.teamAName}
                           </span>
-                          <span className="font-mono text-xs text-neon-magenta tracking-widest">
+                          <span className="font-mono text-xs text-neon-red tracking-widest">
                             VS
                           </span>
-                          <span className="font-mono text-sm font-bold neon-text-magenta">
+                          <span className="font-mono text-sm font-bold neon-text-red">
                             {record.teamBName}
                           </span>
                         </div>
@@ -248,7 +248,7 @@ export default function HistoryPage() {
                                   : evt.type === 'recovery_start'
                                   ? 'bg-neon-orange'
                                   : evt.type === 'match_start' || evt.type === 'match_end'
-                                  ? 'bg-neon-cyan'
+                                  ? 'bg-neon-blue'
                                   : 'bg-border'
                               }`}
                             />
@@ -340,3 +340,4 @@ export default function HistoryPage() {
     </div>
   );
 }
+

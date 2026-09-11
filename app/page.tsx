@@ -8,16 +8,16 @@ const NAV_ITEMS = [
     label: 'Operator Panel',
     description: 'Master control — timers, recovery, match resolution',
     icon: '⚙️',
-    color: 'neon-text-cyan',
-    border: 'neon-border-cyan',
+    color: 'neon-text-blue',
+    border: 'neon-border-blue',
   },
   {
     href: '/display',
     label: 'Audience Display',
     description: 'Full-screen projector view for the arena',
     icon: '📺',
-    color: 'neon-text-magenta',
-    border: 'neon-border-magenta',
+    color: 'neon-text-red',
+    border: 'neon-border-red',
   },
   {
     href: '/leaderboard',
@@ -25,7 +25,7 @@ const NAV_ITEMS = [
     description: 'Tournament standings & statistics',
     icon: '🏆',
     color: 'neon-text-yellow',
-    border: 'neon-border-cyan',
+    border: 'neon-border-blue',
   },
   {
     href: '/history',
@@ -42,8 +42,8 @@ export default function HomePage() {
     <div className="min-h-screen flex flex-col items-center justify-center p-6 scanlines">
       {/* Background decoration */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-neon-cyan/5 blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-neon-magenta/5 blur-[120px]" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-neon-blue/5 blur-[120px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-neon-red/5 blur-[120px]" />
       </div>
 
       <div className="relative z-10 max-w-3xl w-full text-center">
@@ -59,7 +59,7 @@ export default function HomePage() {
         <h1 className="font-mono text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mb-3 neon-text-cyan animate-neon-flicker">
           ELECTRO COMBAT 2.0
         </h1>
-        <p className="font-mono text-sm tracking-[0.3em] text-neon-magenta uppercase mb-10">
+        <p className="font-mono text-sm tracking-[0.3em] text-neon-red uppercase mb-10">
           ⚡ OPERATOR SYSTEM ⚡
         </p>
 
@@ -95,7 +95,7 @@ export default function HomePage() {
               href="https://linkedin.com/in/imjanindu" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-neon-cyan hover:underline hover:text-neon-cyan/80 transition-colors"
+              className="text-neon-blue hover:underline hover:text-neon-blue/80 transition-colors"
             >
               @IMJANINDU
             </a>
@@ -105,3 +105,4 @@ export default function HomePage() {
     </div>
   );
 }
+

@@ -57,6 +57,14 @@ if (!gotTheLock) {
       }
       return { action: 'deny' };
     });
+
+    // Listen for F11 to manually toggle full-screen (since native menu is disabled)
+    win.webContents.on('before-input-event', (event, input) => {
+      if (input.type === 'keyDown' && input.key === 'F11') {
+        win.setFullScreen(!win.isFullScreen());
+        event.preventDefault();
+      }
+    });
   }
 
   app.on('ready', () => {

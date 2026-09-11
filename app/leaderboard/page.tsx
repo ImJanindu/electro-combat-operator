@@ -31,7 +31,7 @@ export default function LeaderboardPage() {
       {/* Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/3 left-1/3 w-96 h-96 rounded-full bg-neon-yellow/5 blur-[120px]" />
-        <div className="absolute bottom-1/3 right-1/3 w-96 h-96 rounded-full bg-neon-cyan/5 blur-[120px]" />
+        <div className="absolute bottom-1/3 right-1/3 w-96 h-96 rounded-full bg-neon-blue/5 blur-[120px]" />
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto">
@@ -40,7 +40,7 @@ export default function LeaderboardPage() {
           <div>
             <Link
               href="/"
-              className="text-muted text-xs font-mono tracking-wider hover:text-neon-cyan transition-colors"
+              className="text-muted text-xs font-mono tracking-wider hover:text-neon-blue transition-colors"
             >
               ← HOME
             </Link>
@@ -50,7 +50,7 @@ export default function LeaderboardPage() {
           </div>
           <Link
             href="/history"
-            className="btn-neon btn-cyan text-[0.65rem] py-1.5 px-3"
+            className="btn-neon btn-blue text-[0.65rem] py-1.5 px-3"
           >
             MATCH HISTORY →
           </Link>
@@ -61,7 +61,7 @@ export default function LeaderboardPage() {
           <div className="panel-glow text-center py-16">
             <p className="font-mono text-muted text-sm">
               No teams registered yet. Add teams from the{' '}
-              <Link href="/operator" className="text-neon-cyan hover:underline">
+              <Link href="/operator" className="text-neon-blue hover:underline">
                 Operator Panel
               </Link>
               .
@@ -168,3 +168,4 @@ export default function LeaderboardPage() {
     </div>
   );
 }
+
