@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getMatchHistory, clearMatchHistory } from '@/lib/store';
 import type { MatchRecord } from '@/lib/types';
+import { PinDialog } from '@/components/PinDialog';
 
 function formatDuration(seconds: number): string {
   const m = Math.floor(seconds / 60);
@@ -79,16 +80,26 @@ export default function HistoryPage() {
     setExpandedId((prev) => (prev === id ? null : id));
   };
 
+  const [pinDialogOpen, setPinDialogOpen] = useState(false);
+
   const handleClearHistory = () => {
     if (history.length === 0) return;
-    const pin = window.prompt('Enter PIN to clear match history:');
+    setPinDialogOpen(true);
+  };
+
+  const onConfirmClear = (pin: string) => {
+    setPinDialogOpen(false);
     const correctPin = process.env.NEXT_PUBLIC_CLEAR_HISTORY_PIN || '23249';
     if (pin === correctPin) {
       clearMatchHistory();
       setHistory([]);
-    } else if (pin !== null) {
+    } else if (pin) {
       alert('Incorrect PIN.');
     }
+  };
+
+  const onCancelClear = () => {
+    setPinDialogOpen(false);
   };
 
   return (
@@ -252,6 +263,13 @@ export default function HistoryPage() {
           </div>
         )}
       </div>
+
+      <PinDialog
+        isOpen={pinDialogOpen}
+        title="Enter PIN to clear history"
+        onConfirm={onConfirmClear}
+        onCancel={onCancelClear}
+      />
     </div>
   );
 }
