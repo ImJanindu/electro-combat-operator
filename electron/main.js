@@ -32,6 +32,9 @@ if (!gotTheLock) {
       },
       autoHideMenuBar: true,
     });
+    
+    // Completely disable the native menu bar so the Alt key doesn't trigger it
+    win.setMenu(null);
 
     win.on('close', (e) => {
       if (isMatchActive) {
