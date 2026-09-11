@@ -23,7 +23,10 @@ const NAV_ITEMS = [
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 scanlines">
+    <div 
+      className="min-h-screen flex flex-col items-center justify-center p-6 scanlines"
+      suppressHydrationWarning
+    >
       {/* Background decoration */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-neon-blue/5 blur-[120px]" />

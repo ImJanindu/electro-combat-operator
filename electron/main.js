@@ -26,6 +26,7 @@ if (!gotTheLock) {
       width: 1280,
       height: 800,
       title: "ElectroCombat Operator",
+      icon: path.join(__dirname, '../public/app-logo.ico'),
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false

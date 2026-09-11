@@ -104,6 +104,21 @@ export default function OperatorPage() {
     setTeamToRemove(null);
   };
 
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
+
+  const onConfirmReset = (pin: string) => {
+    setResetDialogOpen(false);
+    const correctPin = process.env.NEXT_PUBLIC_CLEAR_HISTORY_PIN || '23249';
+    if (pin === correctPin) {
+      store.clearAll();
+      setSelectedTeamAId('');
+      setSelectedTeamBId('');
+      alert('All data has been cleared and factory reset is complete.');
+    } else {
+      alert('Incorrect PIN.');
+    }
+  };
+
   const handleStart = useCallback(() => {
     timer.setMatchDuration(durationMin * 60);
     setTimeout(() => timer.startCountdown(), 50);
@@ -269,7 +284,10 @@ export default function OperatorPage() {
   ]);
 
   return (
-    <div className="min-h-screen p-4 md:p-6 scanlines">
+    <div 
+      className="min-h-screen p-4 md:p-6 scanlines"
+      suppressHydrationWarning
+    >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -283,6 +301,18 @@ export default function OperatorPage() {
           <h1 className="font-mono text-xl md:text-2xl font-bold neon-text-blue mt-1 tracking-wide">
             OPERATOR PANEL
           </h1>
+        </div>
+        <div>
+          <button
+            onClick={() => {
+              if (isIdle) setResetDialogOpen(true);
+            }}
+            disabled={!isIdle}
+            className={`btn-neon btn-red py-1.5 px-4 text-xs ${!isIdle ? 'opacity-50 cursor-not-allowed' : ''}`}
+            title="Clear all teams and history"
+          >
+            FACTORY RESET
+          </button>
         </div>
       </div>
 
@@ -700,11 +730,17 @@ export default function OperatorPage() {
       
       <PinDialog
         isOpen={pinDialogOpen}
-        title="Enter PIN to delete team"
+        title="Enter PIN to remove team"
         onConfirm={onConfirmRemove}
         onCancel={onCancelRemove}
+      />
+
+      <PinDialog
+        isOpen={resetDialogOpen}
+        title="Enter PIN for Factory Reset"
+        onConfirm={onConfirmReset}
+        onCancel={() => setResetDialogOpen(false)}
       />
     </div>
   );
 }
-

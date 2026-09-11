@@ -178,5 +178,11 @@ export function useTeamStore() {
     setHistory(getMatchHistory());
   }, []);
 
-  return { teams, history, add, remove, resolveMatch, refresh };
+  const clearAll = useCallback(() => {
+    clearAllData();
+    setTeams([]);
+    setHistory([]);
+  }, []);
+
+  return { teams, history, add, remove, resolveMatch, refresh, clearAll };
 }

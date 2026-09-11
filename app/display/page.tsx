@@ -30,7 +30,10 @@ export default function DisplayPage() {
   const showTrapDoors = isMatchPhase && elapsedTime >= 60 && elapsedTime < 65;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden scanlines select-none cursor-default">
+    <div 
+      className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden scanlines select-none cursor-default"
+      suppressHydrationWarning
+    >
       {/* Ambient background effects */}
       <div className="fixed inset-0 pointer-events-none">
         <div
