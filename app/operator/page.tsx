@@ -34,6 +34,9 @@ export default function OperatorPage() {
 
   // Prevent accidental tab close/refresh during match
   useEffect(() => {
+    const isElectron = typeof window !== 'undefined' && (window as any).require;
+    if (isElectron) return; // Let Electron main process handle window close
+    
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (timer.state.phase !== 'idle') {
         e.preventDefault();

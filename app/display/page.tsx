@@ -396,12 +396,6 @@ export default function DisplayPage() {
         </div>
       )}
 
-      {/* Corner branding */}
-      <div className="fixed bottom-4 right-6 z-20">
-        <p className="font-mono text-[0.6rem] text-muted/30 tracking-[0.3em] uppercase">
-          ElectroCombat v1.0
-        </p>
-      </div>
     </div>
   );
 }

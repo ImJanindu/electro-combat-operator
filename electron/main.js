@@ -35,15 +35,12 @@ if (!gotTheLock) {
 
     win.on('close', (e) => {
       if (isMatchActive) {
-        const choice = dialog.showMessageBoxSync(win, {
-          type: 'question',
-          buttons: ['Yes', 'No'],
-          title: 'Confirm Exit',
-          message: 'A match is currently active! Are you sure you want to close this window? (This could interrupt the game)'
+        e.preventDefault();
+        dialog.showMessageBoxSync(win, {
+          type: 'error',
+          title: 'Action Denied',
+          message: 'You cannot close the application while a match is active or not resolved. Please end or resolve the match first!'
         });
-        if (choice === 1) {
-          e.preventDefault();
-        }
       }
     });
 
