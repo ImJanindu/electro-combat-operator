@@ -49,7 +49,7 @@ function playAudio(src: string): void {
 
 /** Short beep for each 3-2-1 countdown tick */
 export function playCountdownBeep(): void {
-  playAudio('/audio/countdown-beep.mp3');
+  // playAudio('/audio/countdown-beep.mp3');
 }
 
 /** Buzzer for match start and match end */
@@ -68,4 +68,4 @@ export function playKnockout(): void {
 }
 
 // Preload the countdown audio immediately on the client so there's no delay
-preloadAudio('/audio/countdown-beep.mp3');
+// preloadAudio('/audio/countdown-beep.mp3');

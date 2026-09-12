@@ -350,9 +350,7 @@ export default function OperatorPage() {
                 >
                   <span className="text-sm truncate">{team.name}</span>
                   <div className="flex items-center gap-2">
-                    <span className="text-[0.6rem] text-muted font-mono">
-                      {team.totalPoints}pt
-                    </span>
+
                     <button
                       onClick={() => handleRemoveTeam(team.id)}
                       className="text-neon-red/50 hover:text-neon-red text-xs transition-colors opacity-0 group-hover:opacity-100"
