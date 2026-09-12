@@ -6,6 +6,7 @@ import { useTimer } from '@/lib/use-timer';
 import { useTeamStore } from '@/lib/store';
 import type { MatchResult, MatchRecord } from '@/lib/types';
 import { PinDialog } from '@/components/PinDialog';
+import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 function formatTime(seconds: number): string {
   const m = Math.floor(seconds / 60);
@@ -74,6 +75,7 @@ export default function OperatorPage() {
 
   // Pin Dialog state
   const [pinDialogOpen, setPinDialogOpen] = useState(false);
+  const [isEmergencyStopDialogOpen, setIsEmergencyStopDialogOpen] = useState(false);
   const [teamToRemove, setTeamToRemove] = useState<string | null>(null);
 
   const handleAddTeam = useCallback(() => {
@@ -213,12 +215,6 @@ export default function OperatorPage() {
         return;
       }
 
-      // Enter — Emergency Stop
-      if (key === 'enter' && matchInProgress) {
-        e.preventDefault();
-        timer.emergencyStop();
-        return;
-      }
 
       // Shift — Toggle recovery target team
       if (e.key === 'Shift') {
@@ -580,7 +576,7 @@ export default function OperatorPage() {
 
               {/* Emergency Stop */}
               <button
-                onClick={timer.emergencyStop}
+                onClick={() => setIsEmergencyStopDialogOpen(true)}
                 disabled={!matchInProgress}
                 className="btn-neon btn-red col-span-2 py-2.5"
               >
@@ -738,6 +734,18 @@ export default function OperatorPage() {
         title="Enter PIN for Factory Reset"
         onConfirm={onConfirmReset}
         onCancel={() => setResetDialogOpen(false)}
+      />
+
+      <ConfirmDialog
+        isOpen={isEmergencyStopDialogOpen}
+        title="⚠️ EMERGENCY STOP"
+        message="Are you sure you want to trigger an Emergency Stop? This will instantly halt the match."
+        confirmText="STOP MATCH"
+        onConfirm={() => {
+          timer.emergencyStop();
+          setIsEmergencyStopDialogOpen(false);
+        }}
+        onCancel={() => setIsEmergencyStopDialogOpen(false)}
       />
     </div>
   );
