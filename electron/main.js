@@ -57,6 +57,13 @@ if (!gotTheLock) {
       }
       return { action: 'deny' };
     });
+
+    win.webContents.on('before-input-event', (event, input) => {
+      if (input.key === 'F11' && input.type === 'keyDown') {
+        win.setFullScreen(!win.isFullScreen());
+        event.preventDefault();
+      }
+    });
   }
 
   app.on('ready', () => {

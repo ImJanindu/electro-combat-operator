@@ -41,6 +41,8 @@ body {
   background: var(--bg);
   color: #e4e6f0;
   font-family: var(--font-rajdhani), system-ui, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* ---- Scanline overlay ---- */
