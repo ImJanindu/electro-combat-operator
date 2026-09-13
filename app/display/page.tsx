@@ -77,9 +77,11 @@ export default function DisplayPage() {
         <div className="fixed inset-0 knockout-overlay pointer-events-none z-10" />
       )}
       {/* Top Logo */}
-      <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50">
-        <img src="/logo.png" alt="ElectroCombat Logo" className="h-32 md:h-48 lg:h-56 w-auto opacity-90 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]" />
-      </div>
+      {!isShowLeaderboard && (
+        <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50">
+          <img src="/logo.png" alt="ElectroCombat Logo" className="h-32 md:h-48 lg:h-56 w-auto opacity-90 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]" />
+        </div>
+      )}
 
       {/* ---- IDLE state ---- */}
       {isIdle && (
