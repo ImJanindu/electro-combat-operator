@@ -14,7 +14,7 @@ Electro Combat Operator utilizes an Electron-based multi-window IPC (Inter-Proce
 ### 🎮 Core Controls
 - **Match Timer**: Start, Pause, Resume, and dynamically adjust match time (+/-) on the fly.
 
-- **Knockout System**: Trigger an authoritative 15-second knockout countdown for robotic incapacitation. Can be interrupted and recovered if the robot regains mobility.
+- **Knockout System**: Trigger an authoritative 30-second knockout countdown for robotic incapacitation. Can be interrupted and recovered if the robot regains mobility.
 
 - **Emergency Stop**: Instantly halt the match and freeze the timer in the event of arena hazards or rule violations.
 
