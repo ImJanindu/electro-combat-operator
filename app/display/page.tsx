@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTimerReceiver } from '@/lib/use-timer-receiver';
 import { getTeams } from '@/lib/store';
 import type { Team } from '@/lib/types';
@@ -14,6 +14,8 @@ function formatTime(seconds: number): string {
 export default function DisplayPage() {
   const state = useTimerReceiver();
   const [leaderboard, setLeaderboard] = useState<Team[]>([]);
+  const [showTrapDoorAlert, setShowTrapDoorAlert] = useState(false);
+  const alertTriggeredRef = useRef(false);
 
   const { phase } = state;
   const isIdle = phase === 'idle';
@@ -39,6 +41,23 @@ export default function DisplayPage() {
       setLeaderboard(teams);
     }
   }, [isShowLeaderboard]);
+
+  // Trigger Trap Door Alert after 1 minute (60 seconds elapsed)
+  useEffect(() => {
+    if (state.phase === 'running' && state.mainTime === state.maxTime - 60 && !alertTriggeredRef.current) {
+      alertTriggeredRef.current = true;
+      setShowTrapDoorAlert(true);
+      setTimeout(() => {
+        setShowTrapDoorAlert(false);
+      }, 5000);
+    }
+    
+    // Reset trigger if match ends or restarts
+    if (state.phase === 'idle' || state.mainTime === state.maxTime) {
+      alertTriggeredRef.current = false;
+      setShowTrapDoorAlert(false);
+    }
+  }, [state.mainTime, state.maxTime, state.phase]);
 
   // Determine which "active match" phases to show (timer display)
   const isMatchPhase = !isIdle && !isCountdown && !isResult && !isShowLeaderboard;
@@ -76,10 +95,18 @@ export default function DisplayPage() {
       {isKnockout && (
         <div className="fixed inset-0 knockout-overlay pointer-events-none z-10" />
       )}
-      {/* Top Logo */}
+      {/* Top Logo / Trap Door Alert */}
       {!isShowLeaderboard && (
-        <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50">
-          <img src="/logo.png" alt="ElectroCombat Logo" className="h-32 md:h-48 lg:h-56 w-auto opacity-90 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]" />
+        <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center justify-center min-h-[8rem]">
+          {showTrapDoorAlert ? (
+            <div className="animate-slide-up bg-neon-red/10 border-2 border-neon-red px-6 py-4 md:px-10 md:py-6 rounded-xl shadow-[0_0_30px_rgba(255,32,64,0.4)] backdrop-blur-md animate-float">
+              <h2 className="text-3xl md:text-5xl font-black neon-text-red animate-pulse-glow tracking-widest uppercase m-0 text-center leading-tight">
+                Trap Doors Are Open
+              </h2>
+            </div>
+          ) : (
+            <img src="/logo.png" alt="ElectroCombat Logo" className="h-32 md:h-48 lg:h-56 w-auto opacity-90 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)] animate-slide-up" />
+          )}
         </div>
       )}
 
@@ -92,7 +119,7 @@ export default function DisplayPage() {
           <h1 className="font-mono text-5xl md:text-7xl font-black neon-text-cyan animate-neon-flicker tracking-tight">
             ELECTRO COMBAT 2.0
           </h1>
-          <p className="font-mono text-sm tracking-[0.25em] text-neon-magenta mt-4 uppercase">
+          <p className="font-mono text-sm tracking-[0.25em] text-neon-magenta font-bold mt-4 uppercase">
             Waiting for operator...
           </p>
         </div>
