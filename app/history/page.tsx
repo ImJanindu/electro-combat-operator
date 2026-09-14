@@ -201,7 +201,7 @@ export default function HistoryPage() {
                           <span className="font-mono text-sm font-bold neon-text-cyan">
                             {record.teamAName}
                           </span>
-                          <span className="font-mono text-xs text-neon-magenta tracking-widest">
+                          <span className="font-mono text-xs text-muted tracking-widest">
                             VS
                           </span>
                           <span className="font-mono text-sm font-bold neon-text-magenta">

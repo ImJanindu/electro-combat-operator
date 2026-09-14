@@ -443,7 +443,7 @@ export default function OperatorPage() {
                     ))}
                 </select>
               </div>
-              <div className="text-center text-neon-magenta font-mono text-xs font-bold tracking-widest">
+              <div className="text-center text-muted font-mono text-xs font-bold tracking-widest">
                 VS
               </div>
               <div>
@@ -510,12 +510,12 @@ export default function OperatorPage() {
                   {timer.state.teamA?.name || '—'}
                 </p>
               </div>
-              <span className="font-mono text-xs text-neon-magenta font-bold tracking-widest">
+              <span className="font-mono text-xs text-muted font-bold tracking-widest">
                 VS
               </span>
               <div className="text-right">
                 <p className="text-[0.6rem] font-mono text-muted tracking-widest">TEAM B</p>
-                <p className="font-mono text-sm font-bold neon-text-magenta truncate max-w-[120px]">
+                <p className="font-mono text-sm font-bold neon-text-red truncate max-w-[120px]">
                   {timer.state.teamB?.name || '—'}
                 </p>
               </div>
@@ -659,7 +659,7 @@ export default function OperatorPage() {
                   <button
                     onClick={() => setRecoveryTarget('B')}
                     className={`flex-1 btn-neon text-[0.65rem] py-1.5 ${
-                      recoveryTarget === 'B' ? 'btn-magenta' : 'border-border text-muted'
+                      recoveryTarget === 'B' ? 'btn-red' : 'border-border text-muted'
                     }`}
                   >
                     Team B
@@ -700,7 +700,7 @@ export default function OperatorPage() {
                 </button>
                 <button
                   onClick={() => handleResolve('teamB')}
-                  className="btn-neon btn-magenta w-full py-2.5"
+                  className="btn-neon btn-red w-full py-2.5"
                 >
                   🏆 {timer.state.teamB?.name || 'Team B'} WINS
                 </button>

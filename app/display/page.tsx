@@ -109,12 +109,12 @@ export default function DisplayPage() {
                 {state.teamA?.name || '—'}
               </p>
             </div>
-            <span className="font-mono text-2xl md:text-3xl text-neon-magenta font-black tracking-widest animate-pulse-glow">
+            <span className="font-mono text-2xl md:text-3xl text-muted font-black tracking-widest animate-pulse-glow">
               VS
             </span>
             <div className="text-left">
               <p className="font-mono text-xs tracking-[0.3em] text-muted uppercase">Team B</p>
-              <p className="font-mono text-2xl md:text-4xl font-bold neon-text-magenta mt-1 truncate max-w-[280px]">
+              <p className="font-mono text-2xl md:text-4xl font-bold neon-text-red mt-1 truncate max-w-[280px]">
                 {state.teamB?.name || '—'}
               </p>
             </div>
@@ -145,7 +145,7 @@ export default function DisplayPage() {
                 {state.teamA?.name || '—'}
               </p>
             </div>
-            <span className="font-mono text-lg md:text-2xl text-neon-magenta font-black tracking-widest px-4 shrink-0">
+            <span className="font-mono text-lg md:text-2xl text-muted font-black tracking-widest px-4 shrink-0">
               VS
             </span>
             <div className="text-right flex-1">
@@ -304,14 +304,14 @@ export default function DisplayPage() {
                 {state.teamA?.name || '—'}
               </p>
             </div>
-            <span className="font-mono text-lg md:text-2xl text-neon-magenta font-black tracking-widest px-4 shrink-0">
+            <span className="font-mono text-lg md:text-2xl text-muted font-black tracking-widest px-4 shrink-0">
               VS
             </span>
             <div className="text-right flex-1">
               <p className="font-mono text-xs md:text-sm tracking-[0.3em] text-muted uppercase">
                 Team B
               </p>
-              <p className="font-mono text-xl md:text-3xl lg:text-4xl font-bold neon-text-magenta mt-1 truncate">
+              <p className="font-mono text-xl md:text-3xl lg:text-4xl font-bold neon-text-red mt-1 truncate">
                 {state.teamB?.name || '—'}
               </p>
             </div>
